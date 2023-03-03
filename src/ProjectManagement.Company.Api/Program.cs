@@ -1,4 +1,6 @@
 
+using Steeltoe.Discovery.Client;
+
 namespace ProjectManagement.Company.Api;
 
 public class Program
@@ -7,8 +9,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Configuration.AddJsonFile("hostsettings.json", optional: true);
         // Add services to the container.
-
+        builder.Services.AddDiscoveryClient();
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
