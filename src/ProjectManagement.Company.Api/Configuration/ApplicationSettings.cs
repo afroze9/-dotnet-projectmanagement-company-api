@@ -1,7 +1,6 @@
-﻿namespace ProjectManagement.CompanyAPI.Configuration
+﻿namespace ProjectManagement.CompanyAPI.Configuration;
+
+public class ApplicationSettings
 {
-    public class ApplicationSettings
-    {
-        public string ConnectionString { get; set; }
-    }
+    public string ConnectionString { get; set; }
 }

@@ -4,9 +4,9 @@ using ProjectManagement.CompanyAPI.Domain;
 
 namespace ProjectManagement.CompanyAPI.Data.Configuration;
 
-public class CompanyConfiguration : IEntityTypeConfiguration<CompanyAPI.Domain.Company>
+public class CompanyConfiguration : IEntityTypeConfiguration<Company>
 {
-    public void Configure(EntityTypeBuilder<CompanyAPI.Domain.Company> builder)
+    public void Configure(EntityTypeBuilder<Company> builder)
     {
         builder.Property(c => c.Name)
             .HasMaxLength(255)

@@ -7,7 +7,7 @@ public class EfRepository<T> : RepositoryBase<T>, IReadRepository<T>, IRepositor
     where T : class, IAggregateRoot
 {
     public EfRepository(ApplicationDbContext context)
-        :base(context)
+        : base(context)
     {
-    }    
+    }
 }

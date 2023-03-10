@@ -33,10 +33,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
-        
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseSqlServer(settings.ConnectionString);
-        });
+
+        services.AddDbContext<ApplicationDbContext>(options => { options.UseSqlServer(settings.ConnectionString); });
     }
 }

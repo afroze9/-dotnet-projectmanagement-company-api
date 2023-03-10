@@ -9,14 +9,15 @@ namespace ProjectManagement.CompanyAPI.Data;
 public class ApplicationDbContext : DbContext
 {
     private readonly IDomainEventDispatcher? _dispatcher;
-    
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDomainEventDispatcher dispatcher)
-        :base(options)
+        : base(options)
     {
         _dispatcher = dispatcher;
     }
 
-    public DbSet<CompanyAPI.Domain.Company> Companies => Set<CompanyAPI.Domain.Company>();
+    public DbSet<Company> Companies => Set<Company>();
+
     public DbSet<Tag> Tags => Set<Tag>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,7 +26,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new ())
     {
         int result = await base.SaveChangesAsync(cancellationToken);
 

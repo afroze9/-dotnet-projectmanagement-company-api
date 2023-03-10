@@ -5,15 +5,15 @@ namespace ProjectManagement.CompanyAPI.Domain;
 
 public class Tag : EntityBase, IAggregateRoot, IAuditable<int>
 {
-    public string Name { get; private set; }
-
-    public virtual List<Company> Companies { get; set; } = new ();
-
     public Tag(string name)
     {
         Name = name;
     }
-    
+
+    public string Name { get; }
+
+    public virtual List<Company> Companies { get; set; } = new ();
+
     public int CreatedBy { get; set; }
 
     public DateTime CreatedOn { get; set; }

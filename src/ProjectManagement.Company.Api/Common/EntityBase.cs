@@ -4,14 +4,19 @@ namespace ProjectManagement.CompanyAPI.Common;
 
 public abstract class EntityBase
 {
+    private readonly List<DomainEventBase> _domainEvents = new ();
+
     public int Id { get; set; }
 
-    private List<DomainEventBase> _domainEvents = new ();
+    [NotMapped] public IEnumerable<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
 
-    [NotMapped]
-    public IEnumerable<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
+    protected void RegisterDomainEvent(DomainEventBase domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
 
-    protected void RegisterDomainEvent(DomainEventBase domainEvent) => _domainEvents.Add(domainEvent);
-
-    internal void ClearDomainEvents() => _domainEvents.Clear();
+    internal void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 }

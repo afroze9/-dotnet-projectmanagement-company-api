@@ -2,9 +2,9 @@
 
 namespace ProjectManagement.CompanyAPI.Domain.Specifications;
 
-public class CompanyByNameSpec : Specification<Company>, ISingleResultSpecification
+public class TagByNameSpec : Specification<Tag>, ISingleResultSpecification
 {
-    public CompanyByNameSpec(string name)
+    public TagByNameSpec(string name)
     {
         Query.Where(x => x.Name == name);
     }

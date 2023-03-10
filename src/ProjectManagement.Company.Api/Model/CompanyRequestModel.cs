@@ -2,5 +2,7 @@
 
 public class CompanyRequestModel
 {
-    public required string Name { get; set; }
+    required public string Name { get; set; }
+
+    public List<string> Tags { get; set; } = new ();
 }
