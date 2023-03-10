@@ -18,7 +18,7 @@ public class WeatherForecastController : ControllerBase
     {
         try
         {
-            var res = await _httpClient.GetStringAsync("http://project-api/WeatherForecast");
+            string res = await _httpClient.GetStringAsync("http://project-api/WeatherForecast");
             return res;
         }
         catch (Exception ex)
