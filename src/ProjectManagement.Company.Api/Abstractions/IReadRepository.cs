@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 
-namespace ProjectManagement.Company.Api.Abstractions;
+namespace ProjectManagement.CompanyAPI.Abstractions;
 
 public interface IReadRepository<T> : IReadRepositoryBase<T>
     where T : class, IAggregateRoot

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectManagement.Company.Api.Domain;
+using ProjectManagement.CompanyAPI.Domain;
 
-namespace ProjectManagement.Company.Api.Data.Configuration;
+namespace ProjectManagement.CompanyAPI.Data.Configuration;
 
 public class TagConfiguration: IEntityTypeConfiguration<Tag>
 {
@@ -11,5 +11,11 @@ public class TagConfiguration: IEntityTypeConfiguration<Tag>
         builder.Property(t => t.Name)
             .HasMaxLength(20)
             .IsRequired();
+        
+        builder.ToTable("Tag");
+
+        builder
+            .HasMany<CompanyAPI.Domain.Company>(t => t.Companies)
+            .WithMany(c => c.Tags);
     }
 }

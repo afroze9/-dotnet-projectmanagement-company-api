@@ -1,11 +1,13 @@
-﻿using ProjectManagement.Company.Api.Abstractions;
-using ProjectManagement.Company.Api.Common;
+﻿using ProjectManagement.CompanyAPI.Abstractions;
+using ProjectManagement.CompanyAPI.Common;
 
-namespace ProjectManagement.Company.Api.Domain;
+namespace ProjectManagement.CompanyAPI.Domain;
 
-public class Tag : EntityBase, IAuditable<int>
+public class Tag : EntityBase, IAggregateRoot, IAuditable<int>
 {
     public string Name { get; private set; }
+
+    public virtual List<Company> Companies { get; set; } = new ();
 
     public Tag(string name)
     {

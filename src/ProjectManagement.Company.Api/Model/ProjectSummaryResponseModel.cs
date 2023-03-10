@@ -1,6 +1,5 @@
-﻿namespace ProjectManagement.Company.Api.Model;
+﻿namespace ProjectManagement.CompanyAPI.Model;
 
 public class ProjectSummaryResponseModel
 {
-    
 }

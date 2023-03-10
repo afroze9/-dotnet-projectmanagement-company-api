@@ -1,17 +1,15 @@
-﻿using ProjectManagement.Company.Api.Abstractions;
-using ProjectManagement.Company.Api.Common;
-using ProjectManagement.Company.Api.Domain.Events;
+﻿using ProjectManagement.CompanyAPI.Abstractions;
+using ProjectManagement.CompanyAPI.Common;
+using ProjectManagement.CompanyAPI.Domain.Events;
 
-namespace ProjectManagement.Company.Api.Domain;
+namespace ProjectManagement.CompanyAPI.Domain;
 
 public class Company : EntityBase, IAggregateRoot, IAuditable<string>
 {
     public string Name { get; private set; }
 
-    private readonly List<Tag> _tags = new ();
+    public virtual List<Tag> Tags { get; set; } = new ();
 
-    public IEnumerable<Tag> Tags => _tags.AsReadOnly();
-    
     public Company(string name)
     {
         Name = name;
@@ -24,9 +22,9 @@ public class Company : EntityBase, IAggregateRoot, IAuditable<string>
             throw new ArgumentNullException(nameof(tag));
         }
         
-        _tags.Add(tag);
+        Tags.Add(tag);
         var newTagAddedEvent = new NewTagAddedEvent(this, tag);
-        base.RegisterDomainEvent(newTagAddedEvent);
+        RegisterDomainEvent(newTagAddedEvent);
     }
 
     public void UpdateName(string newName)

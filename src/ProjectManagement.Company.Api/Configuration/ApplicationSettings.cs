@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.Company.Api.Configuration
+﻿namespace ProjectManagement.CompanyAPI.Configuration
 {
     public class ApplicationSettings
     {

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace ProjectManagement.Company.Api.Common;
+namespace ProjectManagement.CompanyAPI.Common;
 
 public abstract class DomainEventBase : INotification
 {

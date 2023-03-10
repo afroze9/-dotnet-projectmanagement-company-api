@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using ProjectManagement.Company.Api.Abstractions;
-using ProjectManagement.Company.Api.Common;
+using ProjectManagement.CompanyAPI.Abstractions;
+using ProjectManagement.CompanyAPI.Common;
 
-namespace ProjectManagement.Company.Api.Services;
+namespace ProjectManagement.CompanyAPI.Services;
 
 public class DomainEventDispatcher : IDomainEventDispatcher
 {

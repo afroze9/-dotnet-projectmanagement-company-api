@@ -1,6 +1,6 @@
-﻿using ProjectManagement.Company.Api.Common;
+﻿using ProjectManagement.CompanyAPI.Common;
 
-namespace ProjectManagement.Company.Api.Domain.Events;
+namespace ProjectManagement.CompanyAPI.Domain.Events;
 
 public class NewTagAddedEvent : DomainEventBase
 {

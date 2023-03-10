@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using ProjectManagement.Company.Api.Abstractions;
-using ProjectManagement.Company.Api.Common;
+using ProjectManagement.CompanyAPI.Abstractions;
+using ProjectManagement.CompanyAPI.Common;
+using ProjectManagement.CompanyAPI.Domain;
 
-namespace ProjectManagement.Company.Api.Data;
+namespace ProjectManagement.CompanyAPI.Data;
 
 public class ApplicationDbContext : DbContext
 {
@@ -15,8 +16,8 @@ public class ApplicationDbContext : DbContext
         _dispatcher = dispatcher;
     }
 
-    public DbSet<Domain.Company> Companies => Set<Domain.Company>();
-    public DbSet<Domain.Tag> Tags => Set<Domain.Tag>();
+    public DbSet<CompanyAPI.Domain.Company> Companies => Set<CompanyAPI.Domain.Company>();
+    public DbSet<Tag> Tags => Set<Tag>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

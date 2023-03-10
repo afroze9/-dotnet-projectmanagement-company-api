@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.Company.Api.Abstractions;
+﻿namespace ProjectManagement.CompanyAPI.Abstractions;
 
 public interface IAuditable<TU>
 {

@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
-using ProjectManagement.Company.Api.Abstractions;
-using ProjectManagement.Company.Api.DTO;
+using ProjectManagement.CompanyAPI.Abstractions;
+using ProjectManagement.CompanyAPI.Domain;
+using ProjectManagement.CompanyAPI.DTO;
 
-namespace ProjectManagement.Company.Api.Services;
+namespace ProjectManagement.CompanyAPI.Services;
 
 public class CompanyService : ICompanyService
 {
-    private readonly IRepository<Domain.Company> _repository;
+    private readonly IRepository<Company> _repository;
     private readonly IMapper _mapper;
 
-    public CompanyService(IRepository<Domain.Company> repository, IMapper mapper)
+    public CompanyService(IRepository<Company> repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -17,8 +18,22 @@ public class CompanyService : ICompanyService
     
     public async Task<List<CompanyDTO>> GetAllAsync()
     {
-        List<Domain.Company> companies = await _repository.ListAsync();
+        List<Company> companies = await _repository.ListAsync();
         List<CompanyDTO>? mappedCompanies = _mapper.Map<List<CompanyDTO>>(companies);
         return mappedCompanies;
+    }
+
+    public async Task<CompanyDTO> CreateAsync(CompanyDTO company)
+    {
+        Company companyToCreate = new (company.Name);
+        Company createdCompany = await _repository.AddAsync(companyToCreate);
+        
+        return _mapper.Map<CompanyDTO>(createdCompany);
+    }
+
+    public async Task<CompanyDTO?> GetByIdAsync(int id)
+    {
+        Company? company = await _repository.GetByIdAsync(id);
+        return _mapper.Map<CompanyDTO?>(company);
     }
 }

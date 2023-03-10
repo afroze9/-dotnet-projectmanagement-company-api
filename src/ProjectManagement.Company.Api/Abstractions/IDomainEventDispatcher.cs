@@ -1,6 +1,6 @@
-﻿using ProjectManagement.Company.Api.Common;
+﻿using ProjectManagement.CompanyAPI.Common;
 
-namespace ProjectManagement.Company.Api.Abstractions;
+namespace ProjectManagement.CompanyAPI.Abstractions;
 
 public interface IDomainEventDispatcher
 {

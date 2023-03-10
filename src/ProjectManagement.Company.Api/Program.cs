@@ -1,9 +1,9 @@
-using ProjectManagement.Company.Api.Configuration;
-using ProjectManagement.Company.Api.Extensions;
-using ProjectManagement.Company.Api.Mapping;
+using ProjectManagement.CompanyAPI.Configuration;
+using ProjectManagement.CompanyAPI.Extensions;
+using ProjectManagement.CompanyAPI.Mapping;
 using Steeltoe.Discovery.Client;
 
-namespace ProjectManagement.Company.Api;
+namespace ProjectManagement.CompanyAPI;
 
 public class Program
 {

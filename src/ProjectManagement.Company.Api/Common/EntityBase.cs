@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProjectManagement.Company.Api.Common;
+namespace ProjectManagement.CompanyAPI.Common;
 
 public abstract class EntityBase
 {

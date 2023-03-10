@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
-using ProjectManagement.Company.Api.DTO;
-using ProjectManagement.Company.Api.Model;
+using ProjectManagement.CompanyAPI.Domain;
+using ProjectManagement.CompanyAPI.DTO;
+using ProjectManagement.CompanyAPI.Model;
 
-namespace ProjectManagement.Company.Api.Mapping;
+namespace ProjectManagement.CompanyAPI.Mapping;
 
 public class CompanyProfile : Profile
 {
     public CompanyProfile()
     {
-        CreateMap<Domain.Company, CompanyDTO>();
-        CreateMap<CompanyDTO, Domain.Company>();
+        CreateMap<Company, CompanyDTO>();
+        CreateMap<CompanyDTO, Company>();
+        
+        CreateMap<CompanyRequestModel, CompanyDTO>();
+        CreateMap<CompanyDTO, CompanyRequestModel>();
         
         CreateMap<CompanyDTO, CompanySummaryResponseModel>();
         CreateMap<CompanySummaryResponseModel, CompanyDTO>();

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectManagement.Company.Api.Abstractions;
-using ProjectManagement.Company.Api.Configuration;
-using ProjectManagement.Company.Api.Data;
-using ProjectManagement.Company.Api.Services;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using ProjectManagement.CompanyAPI.Abstractions;
+using ProjectManagement.CompanyAPI.Configuration;
+using ProjectManagement.CompanyAPI.Data;
+using ProjectManagement.CompanyAPI.Services;
 using Winton.Extensions.Configuration.Consul;
 
-namespace ProjectManagement.Company.Api.Extensions;
+namespace ProjectManagement.CompanyAPI.Extensions;
 
 public static class DependencyInjectionExtensions
 {
@@ -30,6 +31,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
         services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+        services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         
         services.AddDbContext<ApplicationDbContext>(options =>
