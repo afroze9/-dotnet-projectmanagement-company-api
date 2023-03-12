@@ -21,7 +21,7 @@ public class Program
         builder.Configuration.GetRequiredSection("ConsulKV").Bind(consulKvSettings);
         builder.Configuration.AddConsulKV(consulKvSettings);
 
-        ApplicationSettings applicationSettings = new ();
+        ApplicationSettings applicationSettings = new () { ConnectionString = string.Empty };
         builder.Configuration.GetRequiredSection("ApplicationSettings").Bind(applicationSettings);
 
         // Add services to the container.
@@ -40,6 +40,7 @@ public class Program
             string xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
         });
+
         builder.Services.AddAutoMapper(typeof(CompanyProfile));
 
         builder.Services.AddServices(applicationSettings);

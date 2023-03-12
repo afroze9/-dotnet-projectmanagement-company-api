@@ -30,10 +30,11 @@ public static class DependencyInjectionExtensions
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
         services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<ITagService, TagService>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-        services.AddDbContext<ApplicationDbContext>(options => { options.UseSqlServer(settings.ConnectionString); });
+        services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(settings.ConnectionString); });
     }
 }

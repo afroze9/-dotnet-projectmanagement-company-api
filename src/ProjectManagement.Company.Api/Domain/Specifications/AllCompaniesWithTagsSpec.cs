@@ -2,9 +2,9 @@
 
 namespace ProjectManagement.CompanyAPI.Domain.Specifications;
 
-public class CompanyWithTagsSpec : Specification<Company>
+public class AllCompaniesWithTagsSpec : Specification<Company>
 {
-    public CompanyWithTagsSpec()
+    public AllCompaniesWithTagsSpec()
     {
         Query.Include(x => x.Tags);
     }

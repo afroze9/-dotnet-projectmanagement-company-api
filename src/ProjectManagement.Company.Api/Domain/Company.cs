@@ -30,9 +30,12 @@ public class Company : EntityBase, IAggregateRoot, IAuditable<string>
             throw new ArgumentNullException(nameof(tag));
         }
 
-        Tags.Add(tag);
-        NewTagAddedEvent newTagAddedEvent = new (this, tag);
-        RegisterDomainEvent(newTagAddedEvent);
+        if (!Tags.Contains(tag))
+        {
+            Tags.Add(tag);
+            NewTagAddedEvent newTagAddedEvent = new (this, tag);
+            RegisterDomainEvent(newTagAddedEvent);
+        }
     }
 
     public void AddTags(List<Tag> tags)
@@ -51,5 +54,32 @@ public class Company : EntityBase, IAggregateRoot, IAuditable<string>
         }
 
         Name = newName;
+    }
+
+    public void RemoveTag(string tagName)
+    {
+        Tag? tagToRemove = Tags.FirstOrDefault(x => x.Name == tagName);
+
+        if (tagToRemove != null)
+        {
+            Tags.Remove(tagToRemove);
+            TagRemovedEvent @event = new (this, tagToRemove);
+            RegisterDomainEvent(@event);
+        }
+    }
+
+    public void RemoveTags()
+    {
+        if (Tags.Count == 0)
+        {
+            return;
+        }
+
+        List<string> tagNames = Tags.Select(t => t.Name).ToList();
+
+        foreach (string tagName in tagNames)
+        {
+            RemoveTag(tagName);
+        }
     }
 }

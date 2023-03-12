@@ -10,30 +10,31 @@ using ProjectManagement.CompanyAPI.Model;
 namespace ProjectManagement.CompanyAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/v1")]
 public class CompanyController : ControllerBase
 {
+    private readonly IValidator<CompanyRequestModel> _companyRequestModelvalidator;
     private readonly ICompanyService _companyService;
-
+    private readonly IValidator<CompanyUpdateRequestModel> _companyUpdateRequestModelvalidator;
     private readonly ILogger<CompanyController> _logger;
-
     private readonly IMapper _mapper;
-    private readonly IValidator<CompanyRequestModel> _validator;
 
-    public CompanyController(ICompanyService companyService, IMapper mapper, IValidator<CompanyRequestModel> validator,
-        ILogger<CompanyController> logger)
+    public CompanyController(ICompanyService companyService, IMapper mapper,
+        IValidator<CompanyRequestModel> companyRequestModelvalidator,
+        ILogger<CompanyController> logger, IValidator<CompanyUpdateRequestModel> companyUpdateRequestModelvalidator)
     {
         _companyService = companyService;
         _mapper = mapper;
-        _validator = validator;
+        _companyRequestModelvalidator = companyRequestModelvalidator;
         _logger = logger;
+        _companyUpdateRequestModelvalidator = companyUpdateRequestModelvalidator;
     }
 
     /// <summary>
     ///     Gets list of companies.
     /// </summary>
     /// <returns>List of companies.</returns>
-    [HttpGet]
+    [HttpGet("[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CompanySummaryResponseModel>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundResult))]
@@ -55,7 +56,7 @@ public class CompanyController : ControllerBase
     /// </summary>
     /// <param name="id">Company id.</param>
     /// <returns>Company by the given id.</returns>
-    [HttpGet("{id}")]
+    [HttpGet("[controller]/{id}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompanySummaryResponseModel))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundResult))]
@@ -76,13 +77,13 @@ public class CompanyController : ControllerBase
     /// </summary>
     /// <param name="model">Company to create.</param>
     /// <returns>Created company.</returns>
-    [HttpPost]
+    [HttpPost("[controller]")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(List<string>))]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CompanyResponseModel))]
     public async Task<ActionResult<CompanyResponseModel>> Create([FromBody] CompanyRequestModel model)
     {
-        ValidationResult validationResult = await _validator.ValidateAsync(model);
+        ValidationResult validationResult = await _companyRequestModelvalidator.ValidateAsync(model);
 
         if (!validationResult.IsValid)
         {
@@ -96,5 +97,48 @@ public class CompanyController : ControllerBase
         CompanyResponseModel response = _mapper.Map<CompanyResponseModel>(createdCompany);
 
         return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+    }
+
+    /// <summary>
+    ///     Update company details.
+    /// </summary>
+    /// <param name="id">Id of the company to update.</param>
+    /// <param name="model">Details to update.</param>
+    /// <returns>Updated company.</returns>
+    [HttpPut("[controller]/{id}")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompanyResponseModel))]
+    public async Task<ActionResult<CompanyResponseModel>> Update(int id, [FromBody] CompanyUpdateRequestModel model)
+    {
+        ValidationResult validationResult = await _companyUpdateRequestModelvalidator.ValidateAsync(model);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
+        }
+
+        CompanyDTO? updatedCompany = await _companyService.UpdateNameAsync(id, model.Name);
+
+        if (updatedCompany == null)
+        {
+            return BadRequest($"Unable to find company with the id {id}");
+        }
+
+        CompanyResponseModel response = _mapper.Map<CompanyResponseModel>(updatedCompany);
+        return Ok(response);
+    }
+
+    /// <summary>
+    ///     Delete a company.
+    /// </summary>
+    /// <param name="id">Company Id.</param>
+    [HttpDelete("[controller]/{id}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(List<string>))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _companyService.DeleteAsync(id);
+        return NoContent();
     }
 }
