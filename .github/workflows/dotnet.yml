@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 7.0.x
     
     - name: Restore dependencies
-      run: dotnet restore .\src\ProjectManagement.Company.Api\
+      run: dotnet restore ./src/ProjectManagement.Company.Api/
     
     - name: Build
-      run: dotnet build .\src\ProjectManagement.Company.Api\ -c Release --no-restore
+      run: dotnet build ./src/ProjectManagement.Company.Api/ -c Release --no-restore
