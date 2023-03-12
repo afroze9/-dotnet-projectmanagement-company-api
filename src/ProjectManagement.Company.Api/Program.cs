@@ -44,7 +44,7 @@ public class Program
         builder.Services.AddAutoMapper(typeof(CompanyProfile));
 
         builder.Services.AddServices(applicationSettings);
-
+        
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -56,6 +56,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.CompanyAPI.Abstractions;
 using ProjectManagement.CompanyAPI.DTO;
@@ -34,6 +35,7 @@ public class CompanyController : ControllerBase
     ///     Gets list of companies.
     /// </summary>
     /// <returns>List of companies.</returns>
+    [Authorize("read:company")]
     [HttpGet("[controller]")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CompanySummaryResponseModel>))]
@@ -56,6 +58,7 @@ public class CompanyController : ControllerBase
     /// </summary>
     /// <param name="id">Company id.</param>
     /// <returns>Company by the given id.</returns>
+    [Authorize("read:company")]
     [HttpGet("[controller]/{id}")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CompanySummaryResponseModel))]
@@ -77,6 +80,7 @@ public class CompanyController : ControllerBase
     /// </summary>
     /// <param name="model">Company to create.</param>
     /// <returns>Created company.</returns>
+    [Authorize("write:company")]
     [HttpPost("[controller]")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(List<string>))]
@@ -105,6 +109,7 @@ public class CompanyController : ControllerBase
     /// <param name="id">Id of the company to update.</param>
     /// <param name="model">Details to update.</param>
     /// <returns>Updated company.</returns>
+    [Authorize("update:company")]
     [HttpPut("[controller]/{id}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -133,6 +138,7 @@ public class CompanyController : ControllerBase
     ///     Delete a company.
     /// </summary>
     /// <param name="id">Company Id.</param>
+    [Authorize("delete:company")]
     [HttpDelete("[controller]/{id}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(List<string>))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
