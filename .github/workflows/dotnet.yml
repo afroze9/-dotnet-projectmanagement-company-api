@@ -49,7 +49,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --add-source 'https://api.nuget.org/v3/index.json' --ignore-failed-sources
 
       - name: Restore dependencies
         run: dotnet restore ./src/ProjectManagement.Company.Api/
