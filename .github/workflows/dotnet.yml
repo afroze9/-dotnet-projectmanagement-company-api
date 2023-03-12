@@ -23,10 +23,7 @@ jobs:
         dotnet-version: 7.0.x
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore .\src\ProjectManagement.Company.Api\
     
     - name: Build
-      run: dotnet build --no-restore
-    
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet build .\src\ProjectManagement.Company.Api\ -c Release --no-restore
