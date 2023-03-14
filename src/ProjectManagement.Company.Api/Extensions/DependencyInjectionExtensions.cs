@@ -95,7 +95,7 @@ public static class DependencyInjectionExtensions
                             Id = "bearer",
                         },
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 },
             });
         });
@@ -118,7 +118,7 @@ public static class DependencyInjectionExtensions
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddPersistence(configuration);
         services.AddSecurity();
-        services.AddValidatorsFromAssemblyContaining<Program>();
+        services.AddValidatorsFromAssemblyContaining(typeof(Program));
     }
 
     private static readonly string[] _actions = { "read", "write", "update", "delete" };

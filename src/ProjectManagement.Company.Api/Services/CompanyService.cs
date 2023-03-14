@@ -19,23 +19,23 @@ public class CompanyService : ICompanyService
         _mapper = mapper;
     }
 
-    public async Task<List<CompanyDTO>> GetAllAsync()
+    public async Task<List<CompanyDto>> GetAllAsync()
     {
         List<Company> companies = await _companyRepository.ListAsync(new AllCompaniesWithTagsSpec());
-        List<CompanyDTO>? mappedCompanies = _mapper.Map<List<CompanyDTO>>(companies);
+        List<CompanyDto>? mappedCompanies = _mapper.Map<List<CompanyDto>>(companies);
         return mappedCompanies;
     }
 
-    public async Task<CompanyDTO> CreateAsync(CompanyDTO company)
+    public async Task<CompanyDto> CreateAsync(CompanyDto company)
     {
         Company companyToCreate = new (company.Name);
         List<Tag> tagsToAdd = new ();
 
         if (company.Tags.Count != 0)
         {
-            foreach (TagDTO tagDTO in company.Tags)
+            foreach (string tagName in company.Tags.Select(t => t.Name))
             {
-                Tag? dbTag = await _tagRepository.FirstOrDefaultAsync(new TagByNameSpec(tagDTO.Name));
+                Tag? dbTag = await _tagRepository.FirstOrDefaultAsync(new TagByNameSpec(tagName));
 
                 if (dbTag != null)
                 {
@@ -43,7 +43,7 @@ public class CompanyService : ICompanyService
                 }
                 else
                 {
-                    Tag addedTag = await _tagRepository.AddAsync(new Tag(tagDTO.Name));
+                    Tag addedTag = await _tagRepository.AddAsync(new Tag(tagName));
                     tagsToAdd.Add(addedTag);
                 }
             }
@@ -52,16 +52,16 @@ public class CompanyService : ICompanyService
         companyToCreate.AddTags(tagsToAdd);
         Company createdCompany = await _companyRepository.AddAsync(companyToCreate);
 
-        return _mapper.Map<CompanyDTO>(createdCompany);
+        return _mapper.Map<CompanyDto>(createdCompany);
     }
 
-    public async Task<CompanyDTO?> GetByIdAsync(int id)
+    public async Task<CompanyDto?> GetByIdAsync(int id)
     {
         Company? company = await _companyRepository.FirstOrDefaultAsync(new CompanyByIdWithTagsSpec(id));
-        return _mapper.Map<CompanyDTO?>(company);
+        return _mapper.Map<CompanyDto?>(company);
     }
 
-    public async Task<CompanyDTO?> UpdateNameAsync(int id, string name)
+    public async Task<CompanyDto?> UpdateNameAsync(int id, string name)
     {
         Company? companyToUpdate = await _companyRepository.GetByIdAsync(id);
 
@@ -73,11 +73,11 @@ public class CompanyService : ICompanyService
         companyToUpdate.UpdateName(name);
         await _companyRepository.SaveChangesAsync();
 
-        CompanyDTO dto = _mapper.Map<CompanyDTO>(companyToUpdate);
+        CompanyDto dto = _mapper.Map<CompanyDto>(companyToUpdate);
         return dto;
     }
 
-    public async Task<CompanyDTO?> AddTagAsync(int id, string tagName)
+    public async Task<CompanyDto?> AddTagAsync(int id, string tagName)
     {
         Company? companyToUpdate = await _companyRepository.FirstOrDefaultAsync(new CompanyByIdWithTagsSpec(id));
 
@@ -99,10 +99,10 @@ public class CompanyService : ICompanyService
         }
 
         await _companyRepository.SaveChangesAsync();
-        return _mapper.Map<CompanyDTO>(companyToUpdate);
+        return _mapper.Map<CompanyDto>(companyToUpdate);
     }
 
-    public async Task<CompanyDTO?> DeleteTagAsync(int id, string tagName)
+    public async Task<CompanyDto?> DeleteTagAsync(int id, string tagName)
     {
         Company? companyToUpdate = await _companyRepository.FirstOrDefaultAsync(new CompanyByIdWithTagsSpec(id));
 
@@ -114,7 +114,7 @@ public class CompanyService : ICompanyService
         companyToUpdate.RemoveTag(tagName);
 
         await _companyRepository.SaveChangesAsync();
-        CompanyDTO dto = _mapper.Map<CompanyDTO>(companyToUpdate);
+        CompanyDto dto = _mapper.Map<CompanyDto>(companyToUpdate);
 
         return dto;
     }

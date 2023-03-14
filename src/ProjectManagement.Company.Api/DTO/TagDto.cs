@@ -1,6 +1,6 @@
 ﻿namespace ProjectManagement.CompanyAPI.DTO;
 
-public class TagDTO
+public class TagDto
 {
     public int Id { get; set; }
 

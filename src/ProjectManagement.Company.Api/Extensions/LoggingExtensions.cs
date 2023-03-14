@@ -14,7 +14,7 @@ public static class LoggingExtensions
         configuration.GetRequiredSection(nameof(SerilogSettings)).Bind(serilogSettings);
 
         Logger logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose()
+            .MinimumLevel.Information()
             .WriteTo.Console()
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(serilogSettings.ElasticSearchSettings.Uri))
             {

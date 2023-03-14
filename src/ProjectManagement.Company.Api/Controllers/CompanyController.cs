@@ -42,7 +42,7 @@ public class CompanyController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundResult))]
     public async Task<ActionResult<List<CompanySummaryResponseModel>>> GetAll()
     {
-        List<CompanyDTO> companies = await _companyService.GetAllAsync();
+        List<CompanyDto> companies = await _companyService.GetAllAsync();
 
         if (companies.Count == 0)
         {
@@ -65,7 +65,7 @@ public class CompanyController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundResult))]
     public async Task<ActionResult<CompanyResponseModel>> GetById(int id)
     {
-        CompanyDTO? company = await _companyService.GetByIdAsync(id);
+        CompanyDto? company = await _companyService.GetByIdAsync(id);
 
         if (company == null)
         {
@@ -94,9 +94,9 @@ public class CompanyController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
         }
 
-        CompanyDTO company = _mapper.Map<CompanyDTO>(model);
+        CompanyDto company = _mapper.Map<CompanyDto>(model);
 
-        CompanyDTO createdCompany = await _companyService.CreateAsync(company);
+        CompanyDto createdCompany = await _companyService.CreateAsync(company);
 
         CompanyResponseModel response = _mapper.Map<CompanyResponseModel>(createdCompany);
 
@@ -123,7 +123,7 @@ public class CompanyController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
         }
 
-        CompanyDTO? updatedCompany = await _companyService.UpdateNameAsync(id, model.Name);
+        CompanyDto? updatedCompany = await _companyService.UpdateNameAsync(id, model.Name);
 
         if (updatedCompany == null)
         {

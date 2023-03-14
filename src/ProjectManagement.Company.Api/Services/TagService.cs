@@ -19,11 +19,11 @@ public class TagService : ITagService
         _companyRepository = companyRepository;
     }
 
-    public async Task<TagDTO> CreateAsync(string name)
+    public async Task<TagDto> CreateAsync(string name)
     {
         Tag tagToCreate = new (name);
         Tag createdTag = await _tagRepository.AddAsync(tagToCreate);
-        return _mapper.Map<TagDTO>(createdTag);
+        return _mapper.Map<TagDto>(createdTag);
     }
 
     public async Task<bool> DeleteAsync(string name)
@@ -43,9 +43,9 @@ public class TagService : ITagService
         return true;
     }
 
-    public async Task<List<TagDTO>> GetAllAsync()
+    public async Task<List<TagDto>> GetAllAsync()
     {
         List<Tag> tags = await _tagRepository.ListAsync();
-        return _mapper.Map<List<TagDTO>>(tags);
+        return _mapper.Map<List<TagDto>>(tags);
     }
 }

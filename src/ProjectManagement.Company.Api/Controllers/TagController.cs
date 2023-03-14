@@ -40,7 +40,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundResult))]
     public async Task<ActionResult<List<TagResponseModel>>> GetAll()
     {
-        List<TagDTO> tags = await _tagService.GetAllAsync();
+        List<TagDto> tags = await _tagService.GetAllAsync();
 
         if (tags.Count == 0)
         {
@@ -69,7 +69,7 @@ public class TagController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
         }
 
-        TagDTO createdTag = await _tagService.CreateAsync(name);
+        TagDto createdTag = await _tagService.CreateAsync(name);
 
         TagResponseModel response = _mapper.Map<TagResponseModel>(createdTag);
         return Ok(response);
@@ -113,7 +113,7 @@ public class TagController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
         }
 
-        CompanyDTO? updatedCompany = await _companyService.AddTagAsync(id, tagName);
+        CompanyDto? updatedCompany = await _companyService.AddTagAsync(id, tagName);
 
         if (updatedCompany == null)
         {
@@ -134,7 +134,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<CompanyResponseModel>> DeleteCompanyTag(int id, [FromQuery] string tagName)
     {
-        CompanyDTO? updatedCompany = await _companyService.DeleteTagAsync(id, tagName);
+        CompanyDto? updatedCompany = await _companyService.DeleteTagAsync(id, tagName);
 
         if (updatedCompany == null)
         {

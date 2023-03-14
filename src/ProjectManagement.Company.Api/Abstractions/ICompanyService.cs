@@ -4,17 +4,17 @@ namespace ProjectManagement.CompanyAPI.Abstractions;
 
 public interface ICompanyService
 {
-    Task<List<CompanyDTO>> GetAllAsync();
+    Task<List<CompanyDto>> GetAllAsync();
 
-    Task<CompanyDTO> CreateAsync(CompanyDTO company);
+    Task<CompanyDto> CreateAsync(CompanyDto company);
 
-    Task<CompanyDTO?> GetByIdAsync(int id);
+    Task<CompanyDto?> GetByIdAsync(int id);
 
-    Task<CompanyDTO?> UpdateNameAsync(int id, string name);
+    Task<CompanyDto?> UpdateNameAsync(int id, string name);
 
-    Task<CompanyDTO?> AddTagAsync(int id, string tagName);
+    Task<CompanyDto?> AddTagAsync(int id, string tagName);
 
-    Task<CompanyDTO?> DeleteTagAsync(int id, string tagName);
+    Task<CompanyDto?> DeleteTagAsync(int id, string tagName);
 
     Task DeleteAsync(int id);
 }

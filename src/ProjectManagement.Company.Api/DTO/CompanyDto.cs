@@ -1,10 +1,10 @@
 ﻿namespace ProjectManagement.CompanyAPI.DTO;
 
-public class CompanyDTO
+public class CompanyDto
 {
     public int Id { get; set; }
 
     required public string Name { get; set; }
 
-    public List<TagDTO> Tags { get; set; } = new ();
+    public List<TagDto> Tags { get; set; } = new ();
 }

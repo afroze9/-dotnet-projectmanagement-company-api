@@ -9,25 +9,25 @@ public class CompanyProfile : Profile
 {
     public CompanyProfile()
     {
-        CreateMap<Company, CompanyDTO>();
-        CreateMap<CompanyDTO, Company>();
+        CreateMap<Company, CompanyDto>();
+        CreateMap<CompanyDto, Company>();
 
-        CreateMap<CompanyRequestModel, CompanyDTO>()
-            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(x => new TagDTO { Name = x })));
+        CreateMap<CompanyRequestModel, CompanyDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(x => new TagDto { Name = x })));
 
-        CreateMap<CompanyDTO, CompanyResponseModel>()
+        CreateMap<CompanyDto, CompanyResponseModel>()
             .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(x => x.Name)));
 
-        CreateMap<CompanyDTO, CompanySummaryResponseModel>()
+        CreateMap<CompanyDto, CompanySummaryResponseModel>()
             .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags.Select(x => x.Name)));
 
-        CreateMap<CompanySummaryResponseModel, CompanyDTO>();
+        CreateMap<CompanySummaryResponseModel, CompanyDto>();
 
-        CreateMap<CompanyDTO, CompanyResponseModel>();
-        CreateMap<CompanyResponseModel, CompanyDTO>();
+        CreateMap<CompanyDto, CompanyResponseModel>();
+        CreateMap<CompanyResponseModel, CompanyDto>();
 
-        CreateMap<Tag, TagDTO>();
-        CreateMap<TagDTO, Tag>();
-        CreateMap<TagDTO, TagResponseModel>();
+        CreateMap<Tag, TagDto>();
+        CreateMap<TagDto, Tag>();
+        CreateMap<TagDto, TagResponseModel>();
     }
 }

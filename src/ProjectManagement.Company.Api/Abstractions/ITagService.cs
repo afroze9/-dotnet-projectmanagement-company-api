@@ -6,9 +6,9 @@ namespace ProjectManagement.CompanyAPI.Abstractions;
 /// </summary>
 public interface ITagService
 {
-    Task<TagDTO> CreateAsync(string name);
+    Task<TagDto> CreateAsync(string name);
 
     Task<bool> DeleteAsync(string name);
 
-    Task<List<TagDTO>> GetAllAsync();
+    Task<List<TagDto>> GetAllAsync();
 }

@@ -3,9 +3,8 @@ using Serilog;
 
 namespace ProjectManagement.CompanyAPI;
 
-public class Program
+public static class Program
 {
-
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
