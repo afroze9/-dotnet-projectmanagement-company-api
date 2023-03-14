@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using ProjectManagement.CompanyAPI.Abstractions;
 using ProjectManagement.CompanyAPI.Authorization;
 using ProjectManagement.CompanyAPI.Configuration;
@@ -108,6 +110,23 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
     }
 
+    private static void AddTelemetry(this IServiceCollection services, IConfiguration configuration)
+    {
+        TelemetrySettings telemetrySettings = new ();
+        configuration.GetRequiredSection(nameof(TelemetrySettings)).Bind(telemetrySettings);
+
+        services.AddOpenTelemetry()
+            .ConfigureResource(c =>
+            {
+                c.AddService(telemetrySettings.ServiceName, serviceVersion: telemetrySettings.ServiceVersion,
+                    autoGenerateServiceInstanceId: true);
+            })
+            .WithTracing(b =>
+                b.AddAspNetCoreInstrumentation()
+                    .AddOtlpExporter(options => { options.Endpoint = new Uri(telemetrySettings.Endpoint); })
+            );
+    }
+    
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApiDocumentation();
@@ -118,6 +137,7 @@ public static class DependencyInjectionExtensions
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddPersistence(configuration);
         services.AddSecurity();
+        services.AddTelemetry(configuration);
         services.AddValidatorsFromAssemblyContaining(typeof(Program));
     }
 
