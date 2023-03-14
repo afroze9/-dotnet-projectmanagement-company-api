@@ -51,7 +51,7 @@ jobs:
           New-Item -Path ./.sonar/scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
-      - name: Install Dotnet Coverage Tool
+      - name: Install dotnet coverage tool
         run: |
           dotnet tool install --global dotnet-coverage
 
