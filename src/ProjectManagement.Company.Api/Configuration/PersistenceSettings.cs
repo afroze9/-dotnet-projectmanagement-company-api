@@ -1,6 +1,6 @@
 ﻿namespace ProjectManagement.CompanyAPI.Configuration;
 
-public class ApplicationSettings
+public class PersistenceSettings
 {
     required public string ConnectionString { get; set; }
 }
