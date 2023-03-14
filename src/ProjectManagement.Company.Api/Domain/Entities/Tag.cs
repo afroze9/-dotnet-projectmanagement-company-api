@@ -3,7 +3,7 @@ using ProjectManagement.CompanyAPI.Common;
 
 namespace ProjectManagement.CompanyAPI.Domain.Entities;
 
-public class Tag : EntityBase, IAggregateRoot, IAuditable<int>
+public class Tag : EntityBase, IAggregateRoot, IAuditable<string>
 {
     public Tag(string name)
     {
@@ -14,11 +14,11 @@ public class Tag : EntityBase, IAggregateRoot, IAuditable<int>
 
     public virtual List<Company> Companies { get; set; } = new ();
 
-    public int CreatedBy { get; set; }
+    public string CreatedBy { get; set; } = string.Empty;
 
     public DateTime CreatedOn { get; set; }
 
-    public int ModifiedBy { get; set; }
+    public string ModifiedBy { get; set; } = string.Empty;
 
     public DateTime ModifiedOn { get; set; }
 }
