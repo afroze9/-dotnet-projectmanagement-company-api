@@ -2,6 +2,7 @@
 
 namespace ProjectManagement.CompanyAPI.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ConfigurationExtensions
 {
     public static void AddApplicationConfiguration(this ConfigurationManager configuration)

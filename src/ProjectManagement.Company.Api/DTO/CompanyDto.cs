@@ -1,5 +1,6 @@
 ﻿namespace ProjectManagement.CompanyAPI.DTO;
 
+[ExcludeFromCodeCoverage]
 public class CompanyDto
 {
     public int Id { get; set; }

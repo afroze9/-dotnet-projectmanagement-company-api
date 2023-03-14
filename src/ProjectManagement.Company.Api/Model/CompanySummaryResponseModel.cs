@@ -1,5 +1,6 @@
 ﻿namespace ProjectManagement.CompanyAPI.Model;
 
+[ExcludeFromCodeCoverage]
 public class CompanySummaryResponseModel
 {
     public int Id { get; set; }

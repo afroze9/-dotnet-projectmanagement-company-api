@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ProjectManagement.CompanyAPI.Abstractions;
-using ProjectManagement.CompanyAPI.Domain;
+using ProjectManagement.CompanyAPI.Domain.Entities;
 using ProjectManagement.CompanyAPI.Domain.Specifications;
 using ProjectManagement.CompanyAPI.DTO;
 

@@ -1,5 +1,6 @@
 ﻿namespace ProjectManagement.CompanyAPI.Configuration;
 
+[ExcludeFromCodeCoverage]
 public class SerilogSettings
 {
     public SerilogElasticSearchSettings ElasticSearchSettings { get; set; } = new ()

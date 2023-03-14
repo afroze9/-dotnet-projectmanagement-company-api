@@ -3,6 +3,7 @@
 /// <summary>
 ///     New company request model.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class CompanyRequestModel
 {
     /// <summary>

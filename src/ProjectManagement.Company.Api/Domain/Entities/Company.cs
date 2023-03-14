@@ -2,7 +2,7 @@
 using ProjectManagement.CompanyAPI.Common;
 using ProjectManagement.CompanyAPI.Domain.Events;
 
-namespace ProjectManagement.CompanyAPI.Domain;
+namespace ProjectManagement.CompanyAPI.Domain.Entities;
 
 public class Company : EntityBase, IAggregateRoot, IAuditable<string>
 {

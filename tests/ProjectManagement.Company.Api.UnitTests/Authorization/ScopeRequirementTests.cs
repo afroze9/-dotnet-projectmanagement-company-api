@@ -2,6 +2,7 @@
 
 namespace ProjectManagement.Company.Api.UnitTests.Authorization;
 
+[ExcludeFromCodeCoverage]
 public class ScopeRequirementTests
 {
     [Fact]

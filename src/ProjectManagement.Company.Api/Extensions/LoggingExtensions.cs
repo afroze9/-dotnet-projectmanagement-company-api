@@ -6,6 +6,7 @@ using Serilog.Sinks.Elasticsearch;
 
 namespace ProjectManagement.CompanyAPI.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class LoggingExtensions
 {
     public static void AddApplicationLogging(this ILoggingBuilder builder, IConfiguration configuration)

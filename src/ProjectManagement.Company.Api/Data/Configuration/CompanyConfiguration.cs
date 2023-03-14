@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectManagement.CompanyAPI.Domain;
+using ProjectManagement.CompanyAPI.Domain.Entities;
 
 namespace ProjectManagement.CompanyAPI.Data.Configuration;
 
+[ExcludeFromCodeCoverage]
 public class CompanyConfiguration : IEntityTypeConfiguration<Company>
 {
     public void Configure(EntityTypeBuilder<Company> builder)

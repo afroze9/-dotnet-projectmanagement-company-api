@@ -1,7 +1,7 @@
 ﻿using ProjectManagement.CompanyAPI.Abstractions;
 using ProjectManagement.CompanyAPI.Common;
 
-namespace ProjectManagement.CompanyAPI.Domain;
+namespace ProjectManagement.CompanyAPI.Domain.Entities;
 
 public class Tag : EntityBase, IAggregateRoot, IAuditable<int>
 {

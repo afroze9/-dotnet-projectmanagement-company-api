@@ -4,6 +4,7 @@ using ProjectManagement.CompanyAPI.Authorization;
 
 namespace ProjectManagement.Company.Api.UnitTests.Authorization;
 
+[ExcludeFromCodeCoverage]
 public class ScopeRequirementHandlerTests
 {
     [Fact]

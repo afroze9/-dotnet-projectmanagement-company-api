@@ -3,6 +3,7 @@ using Serilog;
 
 namespace ProjectManagement.CompanyAPI;
 
+[ExcludeFromCodeCoverage]
 public static class Program
 {
     public static void Main(string[] args)
@@ -19,6 +20,7 @@ public static class Program
     }
 }
 
+[ExcludeFromCodeCoverage]
 public static class AppConfigurationExtensions
 {
     public static WebApplication Configure(this WebApplication app)

@@ -3,6 +3,7 @@ using ProjectManagement.CompanyAPI.Abstractions;
 
 namespace ProjectManagement.CompanyAPI.Data;
 
+[ExcludeFromCodeCoverage]
 public class EfRepository<T> : RepositoryBase<T>, IReadRepository<T>, IRepository<T>
     where T : class, IAggregateRoot
 {

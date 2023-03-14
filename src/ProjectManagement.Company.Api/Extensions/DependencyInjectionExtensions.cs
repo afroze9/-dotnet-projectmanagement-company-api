@@ -17,6 +17,7 @@ using Winton.Extensions.Configuration.Consul;
 
 namespace ProjectManagement.CompanyAPI.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjectionExtensions
 {
     public static void AddConsulKv(this IConfigurationBuilder builder, ConsulKVSettings settings)
