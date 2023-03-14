@@ -5,6 +5,7 @@ using ProjectManagement.CompanyAPI.Domain.Specifications;
 
 namespace ProjectManagement.CompanyAPI.Model.Validation;
 
+[ExcludeFromCodeCoverage]
 public class CompanyUpdateRequestModelValidator : AbstractValidator<CompanyUpdateRequestModel>
 {
     public CompanyUpdateRequestModelValidator(IRepository<Company> repository)
