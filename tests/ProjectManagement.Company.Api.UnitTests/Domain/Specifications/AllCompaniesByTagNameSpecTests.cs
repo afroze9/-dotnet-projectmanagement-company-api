@@ -4,6 +4,7 @@ using ProjectManagement.CompanyAPI.Domain.Specifications;
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Specifications;
 
+[ExcludeFromCodeCoverage]
 public class AllCompaniesByTagNameSpecTests : SpecificationTests
 {
     [Fact]

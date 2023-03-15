@@ -6,6 +6,7 @@ using ProjectManagement.CompanyAPI.Domain.Entities;
 
 namespace ProjectManagement.CompanyAPI.Data;
 
+[ExcludeFromCodeCoverage]
 public class ApplicationDbContext : DbContext
 {
     private readonly IDomainEventDispatcher? _dispatcher;

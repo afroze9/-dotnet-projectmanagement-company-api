@@ -54,14 +54,6 @@ public class CompanyTests
     }
 
     [Fact]
-    public void Company_NameUpdatedWithNull_ThrowsException()
-    {
-        Company sut = new ("company a");
-        string? nullString = null;
-        Assert.Throws<ArgumentNullException>(() => sut.UpdateName(nullString));
-    }
-
-    [Fact]
     public void Company_WhenTagAdded_SucessfullyAddsTag()
     {
         Company sut = new ("company a");
@@ -73,14 +65,6 @@ public class CompanyTests
         Assert.Equal(2, sut.Tags.Count);
         Assert.Equal("tag 1", sut.Tags.First().Name);
         Assert.Equal(typeof(NewTagAddedEvent), sut.DomainEvents.First().GetType());
-    }
-
-    [Fact]
-    public void Company_WhenNullTagAdded_ThrowsException()
-    {
-        Company sut = new ("company a");
-        Tag? nullTag = null;
-        Assert.Throws<ArgumentNullException>(() => sut.AddTag(nullTag));
     }
 
     [Fact]

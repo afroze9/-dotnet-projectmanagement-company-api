@@ -2,6 +2,7 @@
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Specifications;
 
+[ExcludeFromCodeCoverage]
 public abstract class SpecificationTests
 {
     protected IQueryable<Company> GetCompanies(int count, int tagCount)

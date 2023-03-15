@@ -2,6 +2,7 @@
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Entities;
 
+[ExcludeFromCodeCoverage]
 public class TagTests
 {
     [Fact]

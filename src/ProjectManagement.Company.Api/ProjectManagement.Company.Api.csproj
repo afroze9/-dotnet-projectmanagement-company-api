@@ -55,4 +55,9 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="ProjectManagement.Company.Api.IntegrationTests"/>
+        <InternalsVisibleTo Include="ProjectManagement.Company.Api.UnitTests"/>
+    </ItemGroup>
+
 </Project>

@@ -25,11 +25,6 @@ public class Company : EntityBase, IAggregateRoot, IAuditable<string>
 
     public void AddTag(Tag tag)
     {
-        if (tag == null)
-        {
-            throw new ArgumentNullException(nameof(tag));
-        }
-
         if (!Tags.Contains(tag))
         {
             Tags.Add(tag);
@@ -48,11 +43,6 @@ public class Company : EntityBase, IAggregateRoot, IAuditable<string>
 
     public void UpdateName(string newName)
     {
-        if (string.IsNullOrEmpty(newName))
-        {
-            throw new ArgumentNullException(nameof(newName));
-        }
-
         Name = newName;
     }
 

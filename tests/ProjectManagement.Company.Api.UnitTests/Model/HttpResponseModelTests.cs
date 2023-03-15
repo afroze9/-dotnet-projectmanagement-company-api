@@ -2,6 +2,7 @@
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Model;
 
+[ExcludeFromCodeCoverage]
 public class HttpResponseModelTests
 {
     [Fact]

@@ -3,6 +3,7 @@ using ProjectManagement.CompanyAPI.Domain.Events;
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Events;
 
+[ExcludeFromCodeCoverage]
 public class TagRemovedEventTests
 {
     [Fact]
