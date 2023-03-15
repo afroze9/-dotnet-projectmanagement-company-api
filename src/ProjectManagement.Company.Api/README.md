@@ -1,4 +1,11 @@
-﻿# FluentValidation
+﻿# Migrations
+
+```powershell
+dotnet ef migrations add "Init" --output-dir .\Data\Migrations
+dotnet ef database update
+```
+
+# FluentValidation
 
 Fluent Validation can be used in 2 ways:
 
