@@ -12,7 +12,7 @@ public class Program
         builder.Configuration.AddApplicationConfiguration();
         builder.Logging.AddApplicationLogging(builder.Configuration);
         builder.Services.RegisterDependencies(builder.Configuration);
-        
+
         WebApplication app = builder.Build();
         app.Configure().Run();
 

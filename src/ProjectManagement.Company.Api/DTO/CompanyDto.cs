@@ -7,5 +7,7 @@ public class CompanyDto
 
     required public string Name { get; set; }
 
+    public int ProjectCount { get; set; }
+
     public List<TagDto> Tags { get; set; } = new ();
 }

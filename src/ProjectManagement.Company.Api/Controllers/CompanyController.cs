@@ -72,7 +72,9 @@ public class CompanyController : ControllerBase
             return NotFound();
         }
 
-        return Ok(company);
+        CompanyResponseModel mappedCompany = _mapper.Map<CompanyResponseModel>(company);
+
+        return Ok(mappedCompany);
     }
 
     /// <summary>

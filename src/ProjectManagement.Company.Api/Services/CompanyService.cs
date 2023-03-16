@@ -10,13 +10,16 @@ public class CompanyService : ICompanyService
 {
     private readonly IRepository<Company> _companyRepository;
     private readonly IMapper _mapper;
+    private readonly IProjectService _projectService;
     private readonly IRepository<Tag> _tagRepository;
 
-    public CompanyService(IRepository<Company> companyRepository, IRepository<Tag> tagRepository, IMapper mapper)
+    public CompanyService(IRepository<Company> companyRepository, IRepository<Tag> tagRepository, IMapper mapper,
+        IProjectService projectService)
     {
         _companyRepository = companyRepository;
         _tagRepository = tagRepository;
         _mapper = mapper;
+        _projectService = projectService;
     }
 
     public async Task<List<CompanyDto>> GetAllAsync()
@@ -58,7 +61,17 @@ public class CompanyService : ICompanyService
     public async Task<CompanyDto?> GetByIdAsync(int id)
     {
         Company? company = await _companyRepository.FirstOrDefaultAsync(new CompanyByIdWithTagsSpec(id));
-        return _mapper.Map<CompanyDto?>(company);
+
+        if (company == null)
+        {
+            return null;
+        }
+
+        CompanyDto mappedCompany = _mapper.Map<CompanyDto>(company);
+        int projectCount = await _projectService.GetProjectsByCompanyIdAsync(id);
+        mappedCompany.ProjectCount = projectCount;
+
+        return mappedCompany;
     }
 
     public async Task<CompanyDto?> UpdateNameAsync(int id, string name)

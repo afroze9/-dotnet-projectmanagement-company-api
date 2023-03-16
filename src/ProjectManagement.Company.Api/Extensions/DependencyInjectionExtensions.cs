@@ -12,6 +12,7 @@ using ProjectManagement.CompanyAPI.Configuration;
 using ProjectManagement.CompanyAPI.Data;
 using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
+using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Discovery.Client;
 using Winton.Extensions.Configuration.Consul;
 
@@ -127,6 +128,36 @@ public static class DependencyInjectionExtensions
                     .AddOtlpExporter(options => { options.Endpoint = new Uri(telemetrySettings.Endpoint); })
             );
     }
+
+    private static void AddServiceDiscovery(this IServiceCollection services)
+    {
+        services.AddDiscoveryClient();
+
+        services.AddHttpContextAccessor();
+        services
+            .AddHttpClient("projects")
+            .AddServiceDiscovery()
+            .ConfigureHttpClient((serviceProvider, options) =>
+            {
+                IHttpContextAccessor httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+
+                if (httpContextAccessor.HttpContext == null)
+                {
+                    return;
+                }
+
+                string? bearerToken = httpContextAccessor.HttpContext.Request.Headers["Authorization"]
+                    .FirstOrDefault(h =>
+                        !string.IsNullOrEmpty(h) &&
+                        h.StartsWith("bearer ", StringComparison.InvariantCultureIgnoreCase));
+
+                if (!string.IsNullOrEmpty(bearerToken))
+                {
+                    options.DefaultRequestHeaders.Add("Authorization", bearerToken);
+                }
+            })
+            .AddTypedClient<IProjectService, ProjectService>();
+    }
     
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
@@ -134,19 +165,19 @@ public static class DependencyInjectionExtensions
         services.AddApplicationServices();
         services.AddAutoMapper(typeof(CompanyProfile));
         services.AddControllers();
-        services.AddDiscoveryClient();
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddPersistence(configuration);
         services.AddSecurity();
+        services.AddServiceDiscovery();
         services.AddTelemetry(configuration);
         services.AddValidatorsFromAssemblyContaining(typeof(Program));
     }
 
-    private static readonly string[] _actions = { "read", "write", "update", "delete" };
+    private static readonly string[] Actions = { "read", "write", "update", "delete" };
 
     private static void AddCrudPolicies(this AuthorizationOptions options, string resource)
     {
-        foreach (string action in _actions)
+        foreach (string action in Actions)
         {
             options.AddPolicy($"{action}:{resource}",
                 policy => policy.Requirements.Add(new ScopeRequirement($"{action}:{resource}")));
