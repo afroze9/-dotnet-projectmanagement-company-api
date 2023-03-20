@@ -2,7 +2,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -13,7 +12,13 @@ using ProjectManagement.CompanyAPI.Data;
 using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
 using Steeltoe.Common.Http.Discovery;
+using Steeltoe.Connector.PostgreSql;
+using Steeltoe.Connector.PostgreSql.EFCore;
 using Steeltoe.Discovery.Client;
+using Steeltoe.Management.Endpoint;
+using Steeltoe.Management.Endpoint.Health;
+using Steeltoe.Management.Endpoint.Info;
+using Steeltoe.Management.Endpoint.Refresh;
 using Winton.Extensions.Configuration.Consul;
 
 namespace ProjectManagement.CompanyAPI.Extensions;
@@ -38,15 +43,10 @@ public static class DependencyInjectionExtensions
 
     private static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        PersistenceSettings persistenceSettings = new () { ConnectionString = string.Empty };
-        configuration.GetRequiredSection(nameof(PersistenceSettings)).Bind(persistenceSettings);
-        
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseNpgsql(persistenceSettings.ConnectionString);
-        });
+        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration));
+        services.AddPostgresHealthContributor(configuration);
     }
 
     private static void AddSecurity(this IServiceCollection services)
@@ -158,9 +158,19 @@ public static class DependencyInjectionExtensions
             })
             .AddTypedClient<IProjectService, ProjectService>();
     }
+
+    private static void AddActuators(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthActuator(configuration);
+        services.AddInfoActuator(configuration);
+        services.AddHealthChecks();
+        services.AddRefreshActuator();
+        services.ActivateActuatorEndpoints();
+    }
     
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddActuators(configuration);
         services.AddApiDocumentation();
         services.AddApplicationServices();
         services.AddAutoMapper(typeof(CompanyProfile));
@@ -172,7 +182,7 @@ public static class DependencyInjectionExtensions
         services.AddTelemetry(configuration);
         services.AddValidatorsFromAssemblyContaining(typeof(Program));
     }
-
+    
     private static readonly string[] Actions = { "read", "write", "update", "delete" };
 
     private static void AddCrudPolicies(this AuthorizationOptions options, string resource)
