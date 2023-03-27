@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -13,12 +14,14 @@ using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Connector.PostgreSql;
-using Steeltoe.Connector.PostgreSql.EFCore;
+using Steeltoe.Connector.RabbitMQ;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Management.Endpoint;
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Refresh;
+using Steeltoe.Messaging.RabbitMQ.Config;
+using Steeltoe.Messaging.RabbitMQ.Extensions;
 using Winton.Extensions.Configuration.Consul;
 
 namespace ProjectManagement.CompanyAPI.Extensions;
@@ -45,7 +48,10 @@ public static class DependencyInjectionExtensions
     {
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
-        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(configuration));
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("Default"));
+        });
         services.AddPostgresHealthContributor(configuration);
     }
 
@@ -167,6 +173,34 @@ public static class DependencyInjectionExtensions
         services.AddRefreshActuator();
         services.ActivateActuatorEndpoints();
     }
+
+    private static void AddSteeltoeRabbitMq(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddRabbitMQConnection(configuration);
+
+        // Add Steeltoe Rabbit services, use JSON serialization
+        services.AddRabbitServices(true);
+
+        // Add Steeltoe RabbitAdmin services to get queues declared
+        services.AddRabbitAdmin();
+
+        // Add Steeltoe RabbitTemplate for sending/receiving
+        services.AddRabbitTemplate();
+
+        // Add a queue to the message container that the rabbit admin will discover and declare at startup
+        services.AddRabbitQueue(new Queue(IntegrationEventQueue));
+
+        services.AddSingleton<IMessagePublisher, RabbitMQMessagePublisher>();
+    }
+
+    private static void AddCrudPolicies(this AuthorizationOptions options, string resource)
+    {
+        foreach (string action in Actions)
+        {
+            options.AddPolicy($"{action}:{resource}",
+                policy => policy.Requirements.Add(new ScopeRequirement($"{action}:{resource}")));
+        }
+    }
     
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
@@ -179,18 +213,12 @@ public static class DependencyInjectionExtensions
         services.AddPersistence(configuration);
         services.AddSecurity();
         services.AddServiceDiscovery();
+        services.AddSteeltoeRabbitMq(configuration);
         services.AddTelemetry(configuration);
         services.AddValidatorsFromAssemblyContaining(typeof(Program));
     }
     
     private static readonly string[] Actions = { "read", "write", "update", "delete" };
 
-    private static void AddCrudPolicies(this AuthorizationOptions options, string resource)
-    {
-        foreach (string action in Actions)
-        {
-            options.AddPolicy($"{action}:{resource}",
-                policy => policy.Requirements.Add(new ScopeRequirement($"{action}:{resource}")));
-        }
-    }
+    private const string IntegrationEventQueue = "integration_event_queue_new";
 }

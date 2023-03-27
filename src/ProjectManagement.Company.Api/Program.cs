@@ -1,4 +1,4 @@
-using ProjectManagement.CompanyAPI.Extensions;
+﻿using ProjectManagement.CompanyAPI.Extensions;
 using Serilog;
 
 namespace ProjectManagement.CompanyAPI;
