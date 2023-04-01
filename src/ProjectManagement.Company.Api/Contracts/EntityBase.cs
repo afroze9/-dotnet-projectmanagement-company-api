@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProjectManagement.CompanyAPI.Common;
+namespace ProjectManagement.CompanyAPI.Contracts;
 
 public abstract class EntityBase
 {

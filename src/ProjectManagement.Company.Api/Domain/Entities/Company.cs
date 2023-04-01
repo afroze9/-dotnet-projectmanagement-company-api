@@ -1,5 +1,5 @@
 ﻿using ProjectManagement.CompanyAPI.Abstractions;
-using ProjectManagement.CompanyAPI.Common;
+using ProjectManagement.CompanyAPI.Contracts;
 using ProjectManagement.CompanyAPI.Domain.Events;
 
 namespace ProjectManagement.CompanyAPI.Domain.Entities;

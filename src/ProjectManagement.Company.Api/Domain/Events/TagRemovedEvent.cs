@@ -1,4 +1,4 @@
-﻿using ProjectManagement.CompanyAPI.Common;
+﻿using ProjectManagement.CompanyAPI.Contracts;
 using ProjectManagement.CompanyAPI.Domain.Entities;
 
 namespace ProjectManagement.CompanyAPI.Domain.Events;

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using ProjectManagement.CompanyAPI.Abstractions;
-using ProjectManagement.CompanyAPI.Common;
+using ProjectManagement.CompanyAPI.Contracts;
 
 namespace ProjectManagement.CompanyAPI.Services;
 
