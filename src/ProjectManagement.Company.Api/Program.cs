@@ -32,7 +32,7 @@ public static class AppConfigurationExtensions
         }
 
         app.UseHttpsRedirection();
-
+        app.UseCors("AllowAll");
         app.UseAuthentication();
         app.UseAuthorization();
 

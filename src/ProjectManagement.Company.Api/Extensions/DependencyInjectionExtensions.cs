@@ -216,6 +216,11 @@ public static class DependencyInjectionExtensions
         services.AddSteeltoeRabbitMq(configuration);
         services.AddTelemetry(configuration);
         services.AddValidatorsFromAssemblyContaining(typeof(Program));
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
+        });
     }
     
     private static readonly string[] Actions = { "read", "write", "update", "delete" };
