@@ -1,13 +1,13 @@
 ﻿namespace ProjectManagement.CompanyAPI.DTO;
 
 [ExcludeFromCodeCoverage]
-public class CompanyDto
+public class CompanySummaryDto
 {
     public int Id { get; set; }
 
     required public string Name { get; set; }
 
-    public List<TagDto> Tags { get; set; } = new ();
+    public int ProjectCount { get; set; }
 
-    public List<ProjectSummaryDto> Projects { get; set; } = new ();
+    public List<TagDto> Tags { get; set; } = new ();
 }

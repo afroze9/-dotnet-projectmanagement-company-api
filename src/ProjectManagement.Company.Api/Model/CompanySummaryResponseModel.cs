@@ -7,6 +7,5 @@ public class CompanySummaryResponseModel
 
     required public string Name { get; set; }
 
-    public int ProjectCount { get; set; }
     public List<string> Tags { get; set; } = new ();
 }

@@ -19,8 +19,8 @@ public class TagController : ControllerBase
     private readonly ICompanyService _companyService;
     private readonly ILogger<CompanyController> _logger;
     private readonly IMapper _mapper;
-    private readonly IValidator<TagRequestModel> _tagRequestModelValidator;
     private readonly IMessagePublisher _messagePublisher;
+    private readonly IValidator<TagRequestModel> _tagRequestModelValidator;
     private readonly ITagService _tagService;
 
     public TagController(IMapper mapper, ILogger<CompanyController> logger, ICompanyService companyService,
@@ -117,7 +117,7 @@ public class TagController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
         }
 
-        CompanyDto? updatedCompany = await _companyService.AddTagAsync(id, tagName);
+        CompanySummaryDto? updatedCompany = await _companyService.AddTagAsync(id, tagName);
 
         if (updatedCompany == null)
         {
@@ -152,7 +152,7 @@ public class TagController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<CompanyResponseModel>> DeleteCompanyTag(int id, [FromQuery] string tagName)
     {
-        CompanyDto? updatedCompany = await _companyService.DeleteTagAsync(id, tagName);
+        CompanySummaryDto? updatedCompany = await _companyService.DeleteTagAsync(id, tagName);
 
         if (updatedCompany == null)
         {
@@ -172,7 +172,7 @@ public class TagController : ControllerBase
 
             throw;
         }
-        
+
         return NoContent();
     }
 }

@@ -22,21 +22,21 @@ public class CompanyService : ICompanyService
         _projectService = projectService;
     }
 
-    public async Task<List<CompanyDto>> GetAllAsync()
+    public async Task<List<CompanySummaryDto>> GetAllAsync()
     {
         List<Company> companies = await _companyRepository.ListAsync(new AllCompaniesWithTagsSpec());
-        List<CompanyDto>? mappedCompanies = _mapper.Map<List<CompanyDto>>(companies);
+        List<CompanySummaryDto>? mappedCompanies = _mapper.Map<List<CompanySummaryDto>>(companies);
         return mappedCompanies;
     }
 
-    public async Task<CompanyDto> CreateAsync(CompanyDto company)
+    public async Task<CompanySummaryDto> CreateAsync(CompanySummaryDto companySummary)
     {
-        Company companyToCreate = new (company.Name);
+        Company companyToCreate = new (companySummary.Name);
         List<Tag> tagsToAdd = new ();
 
-        if (company.Tags.Count != 0)
+        if (companySummary.Tags.Count != 0)
         {
-            foreach (string tagName in company.Tags.Select(t => t.Name))
+            foreach (string tagName in companySummary.Tags.Select(t => t.Name))
             {
                 Tag? dbTag = await _tagRepository.FirstOrDefaultAsync(new TagByNameSpec(tagName));
 
@@ -55,7 +55,7 @@ public class CompanyService : ICompanyService
         companyToCreate.AddTags(tagsToAdd);
         Company createdCompany = await _companyRepository.AddAsync(companyToCreate);
 
-        return _mapper.Map<CompanyDto>(createdCompany);
+        return _mapper.Map<CompanySummaryDto>(createdCompany);
     }
 
     public async Task<CompanyDto?> GetByIdAsync(int id)
@@ -67,14 +67,14 @@ public class CompanyService : ICompanyService
             return null;
         }
 
-        CompanyDto mappedCompany = _mapper.Map<CompanyDto>(company);
-        int projectCount = await _projectService.GetProjectsByCompanyIdAsync(id);
-        mappedCompany.ProjectCount = projectCount;
+        CompanyDto mappedCompanySummary = _mapper.Map<CompanyDto>(company);
+        List<ProjectSummaryDto> projects = await _projectService.GetProjectsByCompanyIdAsync(id);
+        mappedCompanySummary.Projects = projects;
 
-        return mappedCompany;
+        return mappedCompanySummary;
     }
 
-    public async Task<CompanyDto?> UpdateNameAsync(int id, string name)
+    public async Task<CompanySummaryDto?> UpdateNameAsync(int id, string name)
     {
         Company? companyToUpdate = await _companyRepository.GetByIdAsync(id);
 
@@ -86,11 +86,11 @@ public class CompanyService : ICompanyService
         companyToUpdate.UpdateName(name);
         await _companyRepository.SaveChangesAsync();
 
-        CompanyDto dto = _mapper.Map<CompanyDto>(companyToUpdate);
-        return dto;
+        CompanySummaryDto summaryDto = _mapper.Map<CompanySummaryDto>(companyToUpdate);
+        return summaryDto;
     }
 
-    public async Task<CompanyDto?> AddTagAsync(int id, string tagName)
+    public async Task<CompanySummaryDto?> AddTagAsync(int id, string tagName)
     {
         Company? companyToUpdate = await _companyRepository.FirstOrDefaultAsync(new CompanyByIdWithTagsSpec(id));
 
@@ -112,10 +112,10 @@ public class CompanyService : ICompanyService
         }
 
         await _companyRepository.SaveChangesAsync();
-        return _mapper.Map<CompanyDto>(companyToUpdate);
+        return _mapper.Map<CompanySummaryDto>(companyToUpdate);
     }
 
-    public async Task<CompanyDto?> DeleteTagAsync(int id, string tagName)
+    public async Task<CompanySummaryDto?> DeleteTagAsync(int id, string tagName)
     {
         Company? companyToUpdate = await _companyRepository.FirstOrDefaultAsync(new CompanyByIdWithTagsSpec(id));
 
@@ -127,9 +127,9 @@ public class CompanyService : ICompanyService
         companyToUpdate.RemoveTag(tagName);
 
         await _companyRepository.SaveChangesAsync();
-        CompanyDto dto = _mapper.Map<CompanyDto>(companyToUpdate);
+        CompanySummaryDto summaryDto = _mapper.Map<CompanySummaryDto>(companyToUpdate);
 
-        return dto;
+        return summaryDto;
     }
 
     public async Task DeleteAsync(int id)
