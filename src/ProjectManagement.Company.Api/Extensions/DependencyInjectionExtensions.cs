@@ -29,6 +29,10 @@ namespace ProjectManagement.CompanyAPI.Extensions;
 [ExcludeFromCodeCoverage]
 public static class DependencyInjectionExtensions
 {
+    private const string IntegrationEventQueue = "integration_event_queue_new";
+
+    private static readonly string[] Actions = { "read", "write", "update", "delete" };
+
     public static void AddConsulKv(this IConfigurationBuilder builder, ConsulKVSettings settings)
     {
         builder.AddConsul(settings.Key, options =>
@@ -52,19 +56,23 @@ public static class DependencyInjectionExtensions
         {
             options.UseNpgsql(configuration.GetConnectionString("Default"));
         });
+
         services.AddPostgresHealthContributor(configuration);
     }
 
-    private static void AddSecurity(this IServiceCollection services)
+    private static void AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
+        Auth0Settings auth0Settings = new ();
+        configuration.GetRequiredSection(nameof(Auth0Settings)).Bind(auth0Settings);
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
-            options.Authority = "https://afrozeprojectmanagement.us.auth0.com/";
-            options.Audience = "company";
+            options.Authority = auth0Settings.Authority;
+            options.Audience = auth0Settings.Audience;
         });
 
         services.AddAuthorization(options => { options.AddCrudPolicies("company"); });
@@ -201,7 +209,7 @@ public static class DependencyInjectionExtensions
                 policy => policy.Requirements.Add(new ScopeRequirement($"{action}:{resource}")));
         }
     }
-    
+
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddActuators(configuration);
@@ -211,7 +219,7 @@ public static class DependencyInjectionExtensions
         services.AddControllers();
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddPersistence(configuration);
-        services.AddSecurity();
+        services.AddSecurity(configuration);
         services.AddServiceDiscovery();
         services.AddSteeltoeRabbitMq(configuration);
         services.AddTelemetry(configuration);
@@ -222,8 +230,4 @@ public static class DependencyInjectionExtensions
             options.AddPolicy("AllowAll", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
         });
     }
-    
-    private static readonly string[] Actions = { "read", "write", "update", "delete" };
-
-    private const string IntegrationEventQueue = "integration_event_queue_new";
 }

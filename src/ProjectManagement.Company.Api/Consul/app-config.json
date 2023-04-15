@@ -3,6 +3,10 @@
   "ConnectionStrings": {
     "Default": "User ID=developer;Password=dev123;Host=localhost;Port=5438;Database=project_management_company"
   },
+  "Auth0Settings": {
+    "Authority": "https://teamly.us.auth0.com",
+    "Audience": "projectmanagement"
+  },
   "SerilogSettings": {
     "ElasticSearchSettings": {
       "Uri": "https://localhost:9200",

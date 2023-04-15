@@ -1,4 +1,6 @@
-﻿using ProjectManagement.CompanyAPI.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectManagement.CompanyAPI.Data;
+using ProjectManagement.CompanyAPI.Extensions;
 using Serilog;
 
 namespace ProjectManagement.CompanyAPI;
@@ -14,9 +16,17 @@ public class Program
         builder.Services.RegisterDependencies(builder.Configuration);
 
         WebApplication app = builder.Build();
+        ApplyMigration(app);
         app.Configure().Run();
 
         Log.CloseAndFlush();
+    }
+
+    private static void ApplyMigration(WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
     }
 }
 

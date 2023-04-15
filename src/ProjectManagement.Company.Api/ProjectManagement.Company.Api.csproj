@@ -51,7 +51,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Common"/>
         <Folder Include="Data\Migrations"/>
     </ItemGroup>
 
