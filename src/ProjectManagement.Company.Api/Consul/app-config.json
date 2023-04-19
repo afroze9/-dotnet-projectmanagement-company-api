@@ -1,4 +1,4 @@
-﻿{
+{
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "Default": "User ID=developer;Password=dev123;Host=localhost;Port=5438;Database=project_management_company"
@@ -25,7 +25,7 @@
     }
   },
   "Consul": {
-    "Token": "ddbf61cc-84aa-3d48-0703-7f2ade35d51c",
+    "Token": "468e844b-1cdd-829f-9bb3-e38650c0fcc0",
     "Discovery": {
       "ServiceName": "company-api",
       "Scheme": "https",
