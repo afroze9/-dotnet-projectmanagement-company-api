@@ -25,7 +25,14 @@ public class CompanyService : ICompanyService
     public async Task<List<CompanySummaryDto>> GetAllAsync()
     {
         List<Company> companies = await _companyRepository.ListAsync(new AllCompaniesWithTagsSpec());
-        List<CompanySummaryDto>? mappedCompanies = _mapper.Map<List<CompanySummaryDto>>(companies);
+        List<CompanySummaryDto> mappedCompanies = _mapper.Map<List<CompanySummaryDto>>(companies);
+
+        foreach (CompanySummaryDto company in mappedCompanies)
+        {
+            List<ProjectSummaryDto> projects = await _projectService.GetProjectsByCompanyIdAsync(company.Id);
+            company.ProjectCount = projects.Count;
+        }
+        
         return mappedCompanies;
     }
 

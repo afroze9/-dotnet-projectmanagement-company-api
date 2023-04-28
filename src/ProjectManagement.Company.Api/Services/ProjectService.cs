@@ -35,4 +35,5 @@ public class ProjectService : IProjectService
 public interface IProjectService
 {
     Task<List<ProjectSummaryDto>> GetProjectsByCompanyIdAsync(int companyId);
+
 }
