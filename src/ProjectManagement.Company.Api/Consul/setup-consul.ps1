@@ -63,11 +63,9 @@ $response = Invoke-RestMethod `
     -ContentType "application/json" `
     -Body $body
 
-
 # Add token to appsettings.json file
 $appsettings_content = Get-Content -Raw "..\appsettings.json" | ConvertFrom-Json
 $appsettings_content.ConsulKV.Token = $secret_id
-$appsettings_content | ConvertTo-Json -Depth 10 | Set-Content  "..\appsettings.json"
+$appsettings_content | ConvertTo-Json -Depth 10 | Set-Content "..\appsettings.json"
 
 Write-Host "Key updated successfully."
-
