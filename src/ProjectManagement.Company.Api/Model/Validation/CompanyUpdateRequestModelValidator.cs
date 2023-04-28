@@ -14,10 +14,12 @@ public class CompanyUpdateRequestModelValidator : AbstractValidator<CompanyUpdat
             .NotNull()
             .MinimumLength(5)
             .MaximumLength(255)
-            .MustAsync(async (name, cancellationToken) =>
+            .MustAsync(async (model, name, cancellationToken) =>
             {
-                bool exists = await repository.AnyAsync(new CompanyByNameSpec(name), cancellationToken);
-                return !exists;
+                Company? existingCompany =
+                    await repository.FirstOrDefaultAsync(new CompanyByNameSpec(name), cancellationToken);
+
+                return existingCompany == null || existingCompany.Id == model.Id;
             })
             .WithMessage("Company with this name already exists");
     }

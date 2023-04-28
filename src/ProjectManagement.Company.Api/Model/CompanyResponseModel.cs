@@ -7,8 +7,6 @@ public class CompanyResponseModel
 
     required public string Name { get; set; }
 
-    public int ProjectCount { get; set; }
-
     public List<TagResponseModel> Tags { get; set; } = new ();
 
     public List<ProjectSummaryResponseModel> Projects { get; set; } = new ();
