@@ -20,10 +20,10 @@ jobs:
 #           java-version: 11
 #           distribution: 'zulu' # Alternative distribution options are available.
      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
+#       - name: Setup .NET
+#         uses: actions/setup-dotnet@v3
+#         with:
+#           dotnet-version: 7.0.x
           
       - uses: actions/checkout@v3
         with:
@@ -55,11 +55,11 @@ jobs:
 #         run: |
 #           dotnet tool install --global dotnet-coverage
 
-      - name: Restore dependencies
-        run: dotnet restore ./src/ProjectManagement.Company.Api/
+#       - name: Restore dependencies
+#         run: dotnet restore ./src/ProjectManagement.Company.Api/
 
-      - name: Build
-        run: dotnet build ./src/ProjectManagement.Company.Api/ -c Release --no-restore
+#       - name: Build
+#         run: dotnet build ./src/ProjectManagement.Company.Api/ -c Release --no-restore
         
 #       - name: Build and analyze
 #         env:
