@@ -1,7 +1,7 @@
 {
   "AllowedHosts": "*",
   "ConnectionStrings": {
-    "Default": "User ID=developer;Password=dev123;Host=localhost;Port=5438;Database=project_management_company"
+    "Default": "User ID=developer;Password=dev123;Host=company-db;Port=5438;Database=project_management_company"
   },
   "Auth0Settings": {
     "Authority": "https://teamly.us.auth0.com",
@@ -9,7 +9,7 @@
   },
   "SerilogSettings": {
     "ElasticSearchSettings": {
-      "Uri": "https://localhost:9200",
+      "Uri": "https://es01:9200",
       "Username": "elastic",
       "Password": "dev123",
       "IndexFormat": "logs-company-api-{0:yyyy.MM}"
@@ -25,7 +25,7 @@
     }
   },
   "Consul": {
-    "Token": "b11fee3b-06d9-c03a-b92d-2111aff42e8a",
+    "Token": "013a4a0f-e67a-c3ee-ad83-c0c584a95781",
     "Discovery": {
       "ServiceName": "company-api",
       "Scheme": "https",
@@ -36,14 +36,12 @@
     }
   },
   "TelemetrySettings": {
-    "Endpoint": "http://localhost:4317",
+    "Endpoint": "http://jaeger:4317",
     "ServiceName": "company-api",
-    "ServiceVersion": "v1"
-  },
-  "Spring": {
-    "RabbitMq": {
-      "Addresses": "amqp://developer:dev123@localhost"
-    }
+    "ServiceVersion": "v1",
+    "EnableAlwaysOnSampler": false,
+    "SampleProbability": 0.2,
+    "EnableConsoleExporter": false
   },
   "management": {
     "endpoints": {
