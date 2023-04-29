@@ -1,13 +1,13 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["ProjectManagement.Company.Api.csproj", "company-api/src/ProjectManagement.Company.Api/"]
-RUN dotnet restore "company-api/src/ProjectManagement.Company.Api/ProjectManagement.Company.Api.csproj"
-WORKDIR "/src/company-api/src/ProjectManagement.Company.Api"
+COPY ["ProjectManagement.Company.Api.csproj", "src/ProjectManagement.Company.Api/"]
+RUN dotnet restore "src/ProjectManagement.Company.Api/ProjectManagement.Company.Api.csproj"
+WORKDIR "/src/ProjectManagement.Company.Api"
 COPY . .
 RUN dotnet build "ProjectManagement.Company.Api.csproj" -c Release -o /app/build
 
