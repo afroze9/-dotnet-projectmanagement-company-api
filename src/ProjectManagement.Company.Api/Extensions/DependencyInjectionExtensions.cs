@@ -15,14 +15,11 @@ using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Connector.PostgreSql;
-using Steeltoe.Connector.RabbitMQ;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Management.Endpoint;
 using Steeltoe.Management.Endpoint.Health;
 using Steeltoe.Management.Endpoint.Info;
 using Steeltoe.Management.Endpoint.Refresh;
-using Steeltoe.Messaging.RabbitMQ.Config;
-using Steeltoe.Messaging.RabbitMQ.Extensions;
 using Winton.Extensions.Configuration.Consul;
 
 namespace ProjectManagement.CompanyAPI.Extensions;
@@ -160,9 +157,9 @@ public static class DependencyInjectionExtensions
             });
     }
 
-    private static void AddServiceDiscovery(this IServiceCollection services)
+    private static void AddConsulDiscovery(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDiscoveryClient();
+        services.AddDiscoveryClient(configuration);
 
         services.AddHttpContextAccessor();
         services
@@ -187,6 +184,14 @@ public static class DependencyInjectionExtensions
                     options.DefaultRequestHeaders.Add("Authorization", bearerToken);
                 }
             })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ClientCertificateOptions = ClientCertificateOption.Manual,
+                    ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
+                };
+            })
             .AddTypedClient<IProjectService, ProjectService>();
     }
 
@@ -197,25 +202,6 @@ public static class DependencyInjectionExtensions
         services.AddHealthChecks();
         services.AddRefreshActuator();
         services.ActivateActuatorEndpoints();
-    }
-
-    private static void AddSteeltoeRabbitMq(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddRabbitMQConnection(configuration);
-
-        // Add Steeltoe Rabbit services, use JSON serialization
-        services.AddRabbitServices(true);
-
-        // Add Steeltoe RabbitAdmin services to get queues declared
-        services.AddRabbitAdmin();
-
-        // Add Steeltoe RabbitTemplate for sending/receiving
-        services.AddRabbitTemplate();
-
-        // Add a queue to the message container that the rabbit admin will discover and declare at startup
-        services.AddRabbitQueue(new Queue(IntegrationEventQueue));
-
-        services.AddSingleton<IMessagePublisher, RabbitMQMessagePublisher>();
     }
 
     private static void AddCrudPolicies(this AuthorizationOptions options, string resource)
@@ -237,8 +223,7 @@ public static class DependencyInjectionExtensions
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddPersistence(configuration);
         services.AddSecurity(configuration);
-        services.AddServiceDiscovery();
-        services.AddSteeltoeRabbitMq(configuration);
+        services.AddConsulDiscovery(configuration);
         services.AddTelemetry(configuration);
         services.AddValidatorsFromAssemblyContaining(typeof(Program));
 
