@@ -85,7 +85,7 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           file: src/ProjectManagement.Company.Api/Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dpm-company-api:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/dpm-company-api:latest, ${{ secrets.DOCKERHUB_USERNAME }}/dpm-company-api:${{ github.run_number }}
           push: true
 #           cache-from: 'type=registry,ref=dpm-company-api/server:buildcache'
 #           cache-to: 'type=registry,ref=dpm-company-api/server:buildcache,mode=max'
