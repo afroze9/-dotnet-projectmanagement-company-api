@@ -4,9 +4,16 @@ using ProjectManagement.CompanyAPI.Domain.Entities;
 
 namespace ProjectManagement.CompanyAPI.Data.Configuration;
 
+/// <summary>
+///     Entity framework configuration for the <see cref="Tag" /> entity.
+/// </summary>
 [ExcludeFromCodeCoverage]
 public class TagConfiguration : IEntityTypeConfiguration<Tag>
 {
+    /// <summary>
+    ///     Configures the entity framework for the <see cref="Tag" /> entity.
+    /// </summary>
+    /// <param name="builder">The entity type builder.</param>
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.Property(t => t.Name)

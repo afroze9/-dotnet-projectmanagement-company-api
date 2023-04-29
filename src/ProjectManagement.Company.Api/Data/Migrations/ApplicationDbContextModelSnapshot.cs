@@ -11,6 +11,7 @@ using ProjectManagement.CompanyAPI.Data;
 namespace ProjectManagement.CompanyAPI.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+    [ExcludeFromCodeCoverage]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
