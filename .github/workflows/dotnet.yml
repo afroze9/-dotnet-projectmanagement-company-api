@@ -86,5 +86,6 @@ jobs:
         with:
           file: src/ProjectManagement.Company.Api/Dockerfile
           tags: dpm-company-api:latest, dpm-company-api:${{ github.run_number }}
-          push: true
-
+          push: dpm-company-api:latest
+          cache-from: 'type=registry,ref=dpm-company-api/server:buildcache'
+          cache-to: 'type=registry,ref=dpm-company-api/server:buildcache,mode=max'
