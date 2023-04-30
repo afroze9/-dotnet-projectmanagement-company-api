@@ -17,17 +17,15 @@ public class CompanyController : ControllerBase
     private readonly IValidator<CompanyRequestModel> _companyRequestModelvalidator;
     private readonly ICompanyService _companyService;
     private readonly IValidator<CompanyUpdateRequestModel> _companyUpdateRequestModelvalidator;
-    private readonly ILogger<CompanyController> _logger;
     private readonly IMapper _mapper;
 
     public CompanyController(ICompanyService companyService, IMapper mapper,
         IValidator<CompanyRequestModel> companyRequestModelvalidator,
-        ILogger<CompanyController> logger, IValidator<CompanyUpdateRequestModel> companyUpdateRequestModelvalidator)
+        IValidator<CompanyUpdateRequestModel> companyUpdateRequestModelvalidator)
     {
         _companyService = companyService;
         _mapper = mapper;
         _companyRequestModelvalidator = companyRequestModelvalidator;
-        _logger = logger;
         _companyUpdateRequestModelvalidator = companyUpdateRequestModelvalidator;
     }
 

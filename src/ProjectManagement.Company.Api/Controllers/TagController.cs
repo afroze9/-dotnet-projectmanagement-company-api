@@ -3,7 +3,6 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.CompanyAPI.Abstractions;
-using ProjectManagement.CompanyAPI.Contracts;
 using ProjectManagement.CompanyAPI.DTO;
 using ProjectManagement.CompanyAPI.Model;
 
@@ -17,22 +16,17 @@ namespace ProjectManagement.CompanyAPI.Controllers;
 public class TagController : ControllerBase
 {
     private readonly ICompanyService _companyService;
-    private readonly ILogger<CompanyController> _logger;
     private readonly IMapper _mapper;
-    private readonly IMessagePublisher _messagePublisher;
     private readonly IValidator<TagRequestModel> _tagRequestModelValidator;
     private readonly ITagService _tagService;
 
-    public TagController(IMapper mapper, ILogger<CompanyController> logger, ICompanyService companyService,
-        ITagService tagService, IValidator<TagRequestModel> tagRequestModelValidator,
-        IMessagePublisher messagePublisher)
+    public TagController(IMapper mapper, ICompanyService companyService,
+        ITagService tagService, IValidator<TagRequestModel> tagRequestModelValidator)
     {
         _mapper = mapper;
-        _logger = logger;
         _companyService = companyService;
         _tagService = tagService;
         _tagRequestModelValidator = tagRequestModelValidator;
-        _messagePublisher = messagePublisher;
     }
 
     /// <summary>
@@ -124,20 +118,6 @@ public class TagController : ControllerBase
             return BadRequest($"Unable to find company with the id {id}");
         }
 
-        CompanyTagAddedIntegrationEvent @event = new (id, tagName);
-
-        try
-        {
-            await _messagePublisher.PublishAsync(@event);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error Publishing integration event: {IntegrationEventId} from {AppName}",
-                @event.Id, Constants.ApplicationName);
-
-            throw;
-        }
-
         CompanyResponseModel response = _mapper.Map<CompanyResponseModel>(updatedCompany);
         return Ok(response);
     }
@@ -157,20 +137,6 @@ public class TagController : ControllerBase
         if (updatedCompany == null)
         {
             return BadRequest($"Unable to find company with the id {id}");
-        }
-
-        CompanyTagDeletedIntegrationEvent @event = new (id, tagName);
-
-        try
-        {
-            await _messagePublisher.PublishAsync(@event);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error Publishing integration event: {IntegrationEventId} from {AppName}",
-                @event.Id, Constants.ApplicationName);
-
-            throw;
         }
 
         return NoContent();

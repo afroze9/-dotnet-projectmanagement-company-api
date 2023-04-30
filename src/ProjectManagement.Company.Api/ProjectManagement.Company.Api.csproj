@@ -48,7 +48,6 @@
         <PackageReference Include="Steeltoe.Connector.EFCore" Version="3.2.3"/>
         <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.2.3"/>
         <PackageReference Include="Steeltoe.Management.EndpointCore" Version="3.2.3"/>
-        <PackageReference Include="Steeltoe.Messaging.RabbitMQ" Version="3.2.3"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
         <PackageReference Include="Winton.Extensions.Configuration.Consul" Version="3.3.0"/>
     </ItemGroup>

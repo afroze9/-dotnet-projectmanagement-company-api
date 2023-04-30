@@ -11,6 +11,7 @@ using ProjectManagement.CompanyAPI.Abstractions;
 using ProjectManagement.CompanyAPI.Authorization;
 using ProjectManagement.CompanyAPI.Configuration;
 using ProjectManagement.CompanyAPI.Data;
+using ProjectManagement.CompanyAPI.Filters;
 using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
 using Steeltoe.Common.Http.Discovery;
@@ -27,8 +28,6 @@ namespace ProjectManagement.CompanyAPI.Extensions;
 [ExcludeFromCodeCoverage]
 public static class DependencyInjectionExtensions
 {
-    private const string IntegrationEventQueue = "integration_event_queue_new";
-
     private static readonly string[] Actions = { "read", "write", "update", "delete" };
 
     public static void AddConsulKv(this IConfigurationBuilder builder, ConsulKVSettings settings)
@@ -230,7 +229,7 @@ public static class DependencyInjectionExtensions
         services.AddApiDocumentation();
         services.AddApplicationServices();
         services.AddAutoMapper(typeof(CompanyProfile));
-        services.AddControllers();
+        services.AddControllers(options => { options.Filters.Add<LoggingFilter>(); });
         services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddPersistence(configuration);
         services.AddSecurity(configuration);
