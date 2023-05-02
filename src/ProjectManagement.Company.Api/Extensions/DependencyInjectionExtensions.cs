@@ -2,7 +2,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -16,6 +15,7 @@ using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
 using Steeltoe.Common.Http.Discovery;
 using Steeltoe.Connector.PostgreSql;
+using Steeltoe.Connector.PostgreSql.EFCore;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Management.Endpoint;
 using Steeltoe.Management.Endpoint.Health;
@@ -51,7 +51,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("Default"));
+            options.UseNpgsql(configuration);
         });
 
         services.AddPostgresHealthContributor(configuration);

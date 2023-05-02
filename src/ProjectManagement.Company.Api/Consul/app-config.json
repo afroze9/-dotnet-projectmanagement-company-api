@@ -1,11 +1,17 @@
 {
   "AllowedHosts": "*",
-  "ConnectionStrings": {
-    "Default": "User ID=developer;Password=dev123;Host=company-db;Port=5438;Database=project_management_company"
-  },
   "Auth0Settings": {
     "Authority": "https://teamly.us.auth0.com",
     "Audience": "projectmanagement"
+  },
+  "Postgres": {
+    "Client": {
+      "Host": "company-db",
+      "Port": 5438,
+      "Username": "developer",
+      "Password": "dev123",
+      "Database": "project_management_company"
+    }
   },
   "SerilogSettings": {
     "ElasticSearchSettings": {
@@ -25,7 +31,7 @@
     }
   },
   "Consul": {
-    "Token": "081b4e3e-2263-44d8-7f0d-e33d04656291",
+    "Token": "53e1188d-b7ba-d1fd-f650-246e0107960d",
     "Discovery": {
       "ServiceName": "company-api",
       "Scheme": "https",

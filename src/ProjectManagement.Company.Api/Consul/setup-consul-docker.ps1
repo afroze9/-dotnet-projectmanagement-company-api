@@ -55,8 +55,8 @@ $body = Get-Content -Raw -Path "app-config.json" | ConvertFrom-Json
 $body.Consul.Token = $secret_id
 
 # TODO: Read these from input
-$body.ConnectionStrings.Default = "User ID=developer;Password=dev123;Host=company-db;Port=5438;Database=project_management_company"
 $body.SerilogSettings.ElasticSearchSettings.Uri = "https://es01:9200"
+$body.Postgres.Client.Host = "company-db"
 $body.TelemetrySettings.Endpoint = "http://jaeger:4317"
 $body | ConvertTo-Json -Depth 10 | Set-Content -Path "app-config.json"
 
