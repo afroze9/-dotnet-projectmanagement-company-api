@@ -1,20 +1,34 @@
 ﻿using AutoMapper;
+using ProjectManagement.CompanyAPI.Abstractions;
 using ProjectManagement.CompanyAPI.DTO;
 using ProjectManagement.CompanyAPI.Model;
 
 namespace ProjectManagement.CompanyAPI.Services;
 
+/// <summary>
+///     Service for managing projects.
+/// </summary>
 public class ProjectService : IProjectService
 {
     private readonly HttpClient _client;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ProjectService" /> class.
+    /// </summary>
+    /// <param name="client">The HTTP client.</param>
+    /// <param name="mapper">The mapper.</param>
     public ProjectService(HttpClient client, IMapper mapper)
     {
         _client = client;
         _mapper = mapper;
     }
 
+    /// <summary>
+    ///     Gets projects by company ID asynchronously.
+    /// </summary>
+    /// <param name="companyId">The ID of the company to get projects for.</param>
+    /// <returns>A list of projects for the specified company.</returns>
     public async Task<List<ProjectSummaryDto>> GetProjectsByCompanyIdAsync(int companyId)
     {
         HttpResponseMessage resposne =
@@ -30,10 +44,4 @@ public class ProjectService : IProjectService
 
         return new List<ProjectSummaryDto>();
     }
-}
-
-public interface IProjectService
-{
-    Task<List<ProjectSummaryDto>> GetProjectsByCompanyIdAsync(int companyId);
-
 }
