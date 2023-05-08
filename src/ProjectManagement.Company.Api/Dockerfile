@@ -5,16 +5,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/ProjectManagement.Company.Api/ProjectManagement.Company.Api.csproj", "src/ProjectManagement.Company.Api/nuget.config", "src/ProjectManagement.Company.Api/"]
-RUN dotnet restore "src/ProjectManagement.Company.Api/ProjectManagement.Company.Api.csproj"
-COPY . .
-WORKDIR "/src/src/ProjectManagement.Company.Api"
-RUN dotnet build "ProjectManagement.Company.Api.csproj" -c Release -o /app/build
+COPY ["src/ProjectManagement.Company.Api/ProjectManagement.Company.Api.csproj", "./"]
+COPY ["src/ProjectManagement.Company.Api/nuget.config", "./"]
+RUN dotnet restore --configfile nuget.config "ProjectManagement.Company.Api.csproj"
 
-FROM build AS publish
-RUN dotnet publish "ProjectManagement.Company.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+COPY ["src/ProjectManagement.Company.Api/*", "./"]
+RUN dotnet build -c Release -o /app/build --no-restore "ProjectManagement.Company.Api.csproj"
 
-FROM base AS final
+FROM build as publish
+RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false --no-restore "ProjectManagement.Company.Api.csproj"
+
+FROM base as final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ProjectManagement.Company.Api.dll"]
