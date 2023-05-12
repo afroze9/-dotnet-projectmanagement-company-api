@@ -6,12 +6,12 @@ using ProjectManagement.CompanyAPI.Domain.Specifications;
 using ProjectManagement.CompanyAPI.DTO;
 using ProjectManagement.CompanyAPI.Services;
 
-namespace ProjectManagement.CompanyAPI.UnitTests.Services;
+namespace ProjectManagement.Company.Api.UnitTests.Services;
 
 public class CompanyServiceTests
 {
     private readonly CompanyService _companyService;
-    private readonly Mock<IRepository<Company>> _mockCompanyRepository = new ();
+    private readonly Mock<IRepository<CompanyAPI.Domain.Entities.Company>> _mockCompanyRepository = new ();
     private readonly Mock<IMapper> _mockMapper = new ();
     private readonly Mock<IProjectService> _mockProjectService = new ();
     private readonly Mock<IRepository<Tag>> _mockTagRepository = new ();
@@ -29,9 +29,9 @@ public class CompanyServiceTests
     public async Task GetAllAsync_ReturnsListOfCompanies()
     {
         // Arrange
-        Company company1 = new ("Company 1");
-        Company company2 = new ("Company 2");
-        List<Company> companies = new ()
+        CompanyAPI.Domain.Entities.Company company1 = new ("Company 1");
+        CompanyAPI.Domain.Entities.Company company2 = new ("Company 2");
+        List<CompanyAPI.Domain.Entities.Company> companies = new ()
             { company1, company2 };
 
         CompanySummaryDto companySummaryDto1 = new () { Id = 1, Name = "Company 1" };
@@ -84,12 +84,13 @@ public class CompanyServiceTests
         _mockTagRepository.Setup(x => x.AddAsync(It.IsAny<Tag>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => tagToAdd);
 
-        Company companyToCreate = new ("ACME");
+        CompanyAPI.Domain.Entities.Company companyToCreate = new ("ACME");
 
-        _mockCompanyRepository.Setup(x => x.AddAsync(It.IsAny<Company>(), It.IsAny<CancellationToken>()))
+        _mockCompanyRepository.Setup(x =>
+                x.AddAsync(It.IsAny<CompanyAPI.Domain.Entities.Company>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(companyToCreate);
 
-        _mockMapper.Setup(x => x.Map<CompanySummaryDto>(It.IsAny<Company>()))
+        _mockMapper.Setup(x => x.Map<CompanySummaryDto>(It.IsAny<CompanyAPI.Domain.Entities.Company>()))
             .Returns(new CompanySummaryDto
             {
                 Id = 1, Name = companyToCreate.Name,
@@ -116,7 +117,9 @@ public class CompanyServiceTests
             Times.Exactly(2));
 
         _mockTagRepository.Verify(x => x.AddAsync(It.IsAny<Tag>(), It.IsAny<CancellationToken>()), Times.Never);
-        _mockCompanyRepository.Verify(x => x.AddAsync(It.IsAny<Company>(), It.IsAny<CancellationToken>()), Times.Once);
-        _mockMapper.Verify(x => x.Map<CompanySummaryDto>(It.IsAny<Company>()), Times.Once);
+        _mockCompanyRepository.Verify(
+            x => x.AddAsync(It.IsAny<CompanyAPI.Domain.Entities.Company>(), It.IsAny<CancellationToken>()), Times.Once);
+
+        _mockMapper.Verify(x => x.Map<CompanySummaryDto>(It.IsAny<CompanyAPI.Domain.Entities.Company>()), Times.Once);
     }
 }

@@ -2,7 +2,7 @@
 using ProjectManagement.CompanyAPI.Domain.Entities;
 using ProjectManagement.CompanyAPI.Domain.Events;
 
-namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Entities;
+namespace ProjectManagement.Company.Api.UnitTests.Domain.Entities;
 
 [ExcludeFromCodeCoverage]
 public class CompanyTests
@@ -10,7 +10,7 @@ public class CompanyTests
     [Fact]
     public void Company_WhenInitialized_CorrectlyInitializes()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
 
         Assert.Equal("company a", sut.Name);
         Assert.Empty(sut.Tags);
@@ -23,7 +23,7 @@ public class CompanyTests
     public void Company_WhenInitializedWithProperties_CorrectlyInitializes()
     {
         DateTime date = DateTime.Now;
-        Company sut = new ("company a")
+        CompanyAPI.Domain.Entities.Company sut = new ("company a")
         {
             Tags = new List<Tag> { new ("tag 1") },
             CreatedBy = "cb",
@@ -46,7 +46,7 @@ public class CompanyTests
     [Fact]
     public void Company_NameUpdated_CorrectlyUpdatesName()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
 
         sut.UpdateName("updated a");
 
@@ -56,7 +56,7 @@ public class CompanyTests
     [Fact]
     public void Company_WhenTagAdded_SucessfullyAddsTag()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
         Tag[] tags = { new ("tag 1"), new ("tag 2") };
 
         sut.AddTags(tags.ToList());
@@ -70,7 +70,7 @@ public class CompanyTests
     [Fact]
     public void Company_WhenTagRemoved_SucessfullyRemovesTag()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
         Tag[] tags = { new ("tag 1"), new ("tag 2") };
 
         sut.AddTags(tags.ToList());
@@ -85,7 +85,7 @@ public class CompanyTests
     [Fact]
     public void Company_WhenTagsRemoved_SucessfullyRemovesTags()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
         Tag[] tags = { new ("tag 1"), new ("tag 2") };
 
         sut.AddTags(tags.ToList());
@@ -102,7 +102,7 @@ public class CompanyTests
     [Fact]
     public void CompanyWithNoTags_WhenTagsRemoved_SucessfullyRemovesTags()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
         sut.RemoveTags();
 
         Assert.Empty(sut.Tags);
@@ -112,7 +112,7 @@ public class CompanyTests
     [Fact]
     public void Company_ClearDomainEvents_ClearsEvents()
     {
-        Company sut = new ("company a");
+        CompanyAPI.Domain.Entities.Company sut = new ("company a");
         Tag[] tags = { new ("tag 1"), new ("tag 2") };
 
         sut.AddTags(tags.ToList());

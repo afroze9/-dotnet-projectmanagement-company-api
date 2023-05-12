@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using ProjectManagement.CompanyAPI.Authorization;
 
-namespace ProjectManagement.CompanyAPI.UnitTests.Authorization;
+namespace ProjectManagement.Company.Api.UnitTests.Authorization;
 
 [ExcludeFromCodeCoverage]
 public class ScopeRequirementHandlerTests

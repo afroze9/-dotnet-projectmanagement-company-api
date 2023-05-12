@@ -1,15 +1,15 @@
 ﻿using ProjectManagement.CompanyAPI.Domain.Entities;
 
-namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Specifications;
+namespace ProjectManagement.Company.Api.UnitTests.Domain.Specifications;
 
 [ExcludeFromCodeCoverage]
 public abstract class SpecificationTests
 {
-    protected IQueryable<Company> GetCompanies(int count, int tagCount)
+    protected IQueryable<CompanyAPI.Domain.Entities.Company> GetCompanies(int count, int tagCount)
     {
         if (count <= 0)
         {
-            return new List<Company>()
+            return new List<CompanyAPI.Domain.Entities.Company>()
                 .AsQueryable();
         }
 
@@ -19,9 +19,9 @@ public abstract class SpecificationTests
             .AsQueryable();
     }
 
-    protected Company GetCompany(int id, int tagCount)
+    protected CompanyAPI.Domain.Entities.Company GetCompany(int id, int tagCount)
     {
-        Company company = new ($"company {id}")
+        CompanyAPI.Domain.Entities.Company company = new ($"company {id}")
         {
             Id = id,
         };
