@@ -91,7 +91,7 @@ public class CompanyController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         CompanySummaryDto companySummary = _mapper.Map<CompanySummaryDto>(model);
@@ -120,7 +120,7 @@ public class CompanyController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         CompanySummaryDto? updatedCompany = await _companyService.UpdateNameAsync(id, model.Name);

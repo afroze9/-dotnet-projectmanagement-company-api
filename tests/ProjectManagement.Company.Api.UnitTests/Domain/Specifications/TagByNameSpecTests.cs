@@ -2,7 +2,7 @@
 using ProjectManagement.CompanyAPI.Domain.Entities;
 using ProjectManagement.CompanyAPI.Domain.Specifications;
 
-namespace ProjectManagement.Company.Api.UnitTests.Domain.Specifications;
+namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Specifications;
 
 [ExcludeFromCodeCoverage]
 public class TagByNameSpecTests : SpecificationTests

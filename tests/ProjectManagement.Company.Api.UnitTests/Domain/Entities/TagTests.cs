@@ -1,6 +1,6 @@
 ﻿using ProjectManagement.CompanyAPI.Domain.Entities;
 
-namespace ProjectManagement.Company.Api.UnitTests.Domain.Entities;
+namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Entities;
 
 [ExcludeFromCodeCoverage]
 public class TagTests
@@ -23,7 +23,7 @@ public class TagTests
         DateTime date = DateTime.Now;
         Tag sut = new ("tag a")
         {
-            Companies = new List<CompanyAPI.Domain.Entities.Company> { new ("company 1") },
+            Companies = new List<Company> { new ("company 1") },
             CreatedBy = "cb",
             CreatedOn = date,
             ModifiedBy = "mb",

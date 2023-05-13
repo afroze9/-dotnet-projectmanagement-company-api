@@ -64,7 +64,7 @@ public class TagController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         TagDto createdTag = await _tagService.CreateAsync(name);
@@ -108,7 +108,7 @@ public class TagController : ControllerBase
 
         if (!validationResult.IsValid)
         {
-            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
         CompanySummaryDto? updatedCompany = await _companyService.AddTagAsync(id, tagName);

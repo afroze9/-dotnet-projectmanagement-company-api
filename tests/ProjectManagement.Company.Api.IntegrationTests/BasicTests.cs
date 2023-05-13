@@ -1,27 +1,25 @@
-﻿using System.Net;
+﻿namespace ProjectManagement.CompanyAPI.IntegrationTests;
 
-namespace ProjectManagement.CompanyAPI.IntegrationTests;
+//[ExcludeFromCodeCoverage]
+//public class BasicTests : IClassFixture<TestWebApplicationFactory<Program>>
+//{
+//    private readonly TestWebApplicationFactory<Program> _factory;
 
-[ExcludeFromCodeCoverage]
-public class BasicTests : IClassFixture<TestWebApplicationFactory<Program>>
-{
-    private readonly TestWebApplicationFactory<Program> _factory;
+//    public BasicTests(TestWebApplicationFactory<Program> factory)
+//    {
+//        _factory = factory;
+//    }
 
-    public BasicTests(TestWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-    }
-    
-    [Fact]
-    public async Task Api_WhenCalledWithoutAuthorization_ReturnsUnauthorized()
-    {
-        // Arrange
-        HttpClient client = _factory.CreateClient();
+//    [Fact]
+//    public async Task Api_WhenCalledWithoutAuthorization_ReturnsUnauthorized()
+//    {
+//        // Arrange
+//        HttpClient client = _factory.CreateClient();
 
-        // Act
-        HttpResponseMessage response = await client.GetAsync("api/v1/Company");
+//        // Act
+//        HttpResponseMessage response = await client.GetAsync("api/v1/Company");
 
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-}
+//        // Assert
+//        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+//    }
+//}

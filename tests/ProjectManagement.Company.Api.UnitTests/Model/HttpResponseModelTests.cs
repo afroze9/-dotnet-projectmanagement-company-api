@@ -1,6 +1,6 @@
 ﻿using ProjectManagement.CompanyAPI.Model;
 
-namespace ProjectManagement.Company.Api.UnitTests.Model;
+namespace ProjectManagement.CompanyAPI.UnitTests.Model;
 
 [ExcludeFromCodeCoverage]
 public class HttpResponseModelTests

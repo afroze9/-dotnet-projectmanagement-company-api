@@ -1,7 +1,7 @@
 ﻿using ProjectManagement.CompanyAPI.Domain.Entities;
 using ProjectManagement.CompanyAPI.Domain.Events;
 
-namespace ProjectManagement.Company.Api.UnitTests.Domain.Events;
+namespace ProjectManagement.CompanyAPI.UnitTests.Domain.Events;
 
 [ExcludeFromCodeCoverage]
 public class NewTagAddedEventTests
@@ -10,7 +10,7 @@ public class NewTagAddedEventTests
     public void NewTagAddedEvent_WhenCreated_ReturnsCorrectValues()
     {
         Tag tag = new ("tag 1");
-        CompanyAPI.Domain.Entities.Company company = new ("company a");
+        Company company = new ("company a");
 
         NewTagAddedEvent sut = new (company, tag);
 

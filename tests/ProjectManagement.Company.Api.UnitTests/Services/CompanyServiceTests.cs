@@ -1,125 +1,272 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
+using FluentAssertions;
 using Moq;
 using ProjectManagement.CompanyAPI.Abstractions;
 using ProjectManagement.CompanyAPI.Domain.Entities;
 using ProjectManagement.CompanyAPI.Domain.Specifications;
 using ProjectManagement.CompanyAPI.DTO;
+using ProjectManagement.CompanyAPI.Mapping;
 using ProjectManagement.CompanyAPI.Services;
 
-namespace ProjectManagement.Company.Api.UnitTests.Services;
+namespace ProjectManagement.CompanyAPI.UnitTests.Services;
 
+[ExcludeFromCodeCoverage]
 public class CompanyServiceTests
 {
-    private readonly CompanyService _companyService;
-    private readonly Mock<IRepository<CompanyAPI.Domain.Entities.Company>> _mockCompanyRepository = new ();
-    private readonly Mock<IMapper> _mockMapper = new ();
-    private readonly Mock<IProjectService> _mockProjectService = new ();
-    private readonly Mock<IRepository<Tag>> _mockTagRepository = new ();
+    private readonly Fixture _fixture;
+    private readonly IMapper _mapper;
 
     public CompanyServiceTests()
     {
-        _companyService = new CompanyService(
-            _mockCompanyRepository.Object,
-            _mockTagRepository.Object,
-            _mockMapper.Object,
-            _mockProjectService.Object);
+        _fixture = new Fixture();
+
+        MapperConfiguration mappingConfig = new (mc => { mc.AddProfile(new CompanyProfile()); });
+        _mapper = mappingConfig.CreateMapper();
     }
 
     [Fact]
-    public async Task GetAllAsync_ReturnsListOfCompanies()
+    public async void GetAllAsync_WhenCalled_ReturnsListOfAllCompanies()
     {
         // Arrange
-        CompanyAPI.Domain.Entities.Company company1 = new ("Company 1");
-        CompanyAPI.Domain.Entities.Company company2 = new ("Company 2");
-        List<CompanyAPI.Domain.Entities.Company> companies = new ()
-            { company1, company2 };
+        List<Company> companies = new ()
+            { new (_fixture.Create<string>()), new (_fixture.Create<string>()), new (_fixture.Create<string>()) };
 
-        CompanySummaryDto companySummaryDto1 = new () { Id = 1, Name = "Company 1" };
-        CompanySummaryDto companySummaryDto2 = new () { Id = 2, Name = "Company 2" };
-        List<CompanySummaryDto> mappedCompanies = new ()
-            { companySummaryDto1, companySummaryDto2 };
+        List<CompanySummaryDto> companySummaries = _mapper.Map<List<CompanySummaryDto>>(companies);
 
-        _mockCompanyRepository.Setup(repo =>
-                repo.ListAsync(It.IsAny<AllCompaniesWithTagsSpec>(), It.IsAny<CancellationToken>()))
+        Mock<IProjectService> projectServiceMock = new ();
+        projectServiceMock.Setup(s => s.GetProjectsByCompanyIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(new List<ProjectSummaryDto>());
+
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s => s.ListAsync(It.IsAny<AllCompaniesWithTagsSpec>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(companies);
 
-        _mockMapper.Setup(mapper => mapper.Map<List<CompanySummaryDto>>(companies))
-            .Returns(mappedCompanies);
-
-        _mockProjectService.Setup(service => service.GetProjectsByCompanyIdAsync(1))
-            .ReturnsAsync(new List<ProjectSummaryDto>());
-
-        _mockProjectService.Setup(service => service.GetProjectsByCompanyIdAsync(2))
-            .ReturnsAsync(new List<ProjectSummaryDto>());
+        CompanyService companyService = new (companyRepoMock.Object, null, _mapper, projectServiceMock.Object);
 
         // Act
-        List<CompanySummaryDto> result = await _companyService.GetAllAsync();
+        List<CompanySummaryDto> result = await companyService.GetAllAsync();
 
         // Assert
-        Assert.Equal(mappedCompanies, result);
+        result.Should().BeEquivalentTo(companySummaries);
+        projectServiceMock.Verify(v => v.GetProjectsByCompanyIdAsync(It.IsAny<int>()),
+            Times.Exactly(companies.Count()));
+
+        companyRepoMock.Verify(v => v.ListAsync(It.IsAny<AllCompaniesWithTagsSpec>(), It.IsAny<CancellationToken>()),
+            Times.Once());
     }
 
     [Fact]
-    public async Task CreateAsync_ShouldReturnCreatedCompany()
+    public async void CreateAsync_WhenCalled_ReturnsCreatedCompany()
     {
         // Arrange
+        CompanySummaryDto companySummary = _fixture.Create<CompanySummaryDto>();
+        Company company = new (companySummary.Name);
 
-        CompanySummaryDto companySummaryDto = new ()
-        {
-            Name = "ACME",
-            Tags = new List<TagDto>
-            {
-                new () { Name = "tag1" },
-                new () { Name = "tag2" },
-            },
-        };
+        TagDto tagDto = _fixture.Create<TagDto>();
+        company.AddTags(new List<Tag>
+            { new (tagDto.Name) });
 
-        Tag dbTag1 = new ("tag1") { Id = 1 };
-        Tag dbTag2 = new ("tag2") { Id = 2 };
-        Tag tagToAdd = new ("newtag");
+        Tag tag = _mapper.Map<Tag>(tagDto);
 
-        _mockTagRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<TagByNameSpec>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(dbTag1);
+        Mock<IRepository<Tag>> tagRepoMock = new ();
+        tagRepoMock.Setup(s => s.FirstOrDefaultAsync(It.IsAny<TagByNameSpec>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(tag);
 
-        _mockTagRepository.Setup(x => x.AddAsync(It.IsAny<Tag>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() => tagToAdd);
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s => s.AddAsync(It.IsAny<Company>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(company);
 
-        CompanyAPI.Domain.Entities.Company companyToCreate = new ("ACME");
-
-        _mockCompanyRepository.Setup(x =>
-                x.AddAsync(It.IsAny<CompanyAPI.Domain.Entities.Company>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(companyToCreate);
-
-        _mockMapper.Setup(x => x.Map<CompanySummaryDto>(It.IsAny<CompanyAPI.Domain.Entities.Company>()))
-            .Returns(new CompanySummaryDto
-            {
-                Id = 1, Name = companyToCreate.Name,
-                Tags = new List<TagDto>
-                {
-                    new () { Id = 1, Name = "tag1" },
-                    new () { Id = 2, Name = "tag2" },
-                },
-            });
+        Mock<IProjectService> projectServiceMock = new ();
+        CompanyService companyService =
+            new (companyRepoMock.Object, tagRepoMock.Object, _mapper, projectServiceMock.Object);
 
         // Act
-        CompanySummaryDto result = await _companyService.CreateAsync(companySummaryDto);
+        CompanySummaryDto result = await companyService.CreateAsync(companySummary);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal("ACME", result.Name);
-        Assert.Equal(2, result.Tags.Count);
-        Assert.Equal(dbTag1.Id, result.Tags[0].Id);
-        Assert.Equal(dbTag1.Name, result.Tags[0].Name);
-        Assert.Equal(dbTag2.Id, result.Tags[1].Id);
-        Assert.Equal(dbTag2.Name, result.Tags[1].Name);
+        result.Should().BeEquivalentTo(_mapper.Map<CompanySummaryDto>(company));
+        companyRepoMock.Verify(v => v.AddAsync(It.IsAny<Company>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
 
-        _mockTagRepository.Verify(x => x.FirstOrDefaultAsync(It.IsAny<TagByNameSpec>(), It.IsAny<CancellationToken>()),
-            Times.Exactly(2));
+    [Fact]
+    public async void CreateAsync_WhenDbTagDoesNotExist_ReturnsCreatedCompanyWithTag()
+    {
+        // Arrange
+        CompanySummaryDto companySummary = _fixture.Create<CompanySummaryDto>();
+        Company company = new (companySummary.Name);
 
-        _mockTagRepository.Verify(x => x.AddAsync(It.IsAny<Tag>(), It.IsAny<CancellationToken>()), Times.Never);
-        _mockCompanyRepository.Verify(
-            x => x.AddAsync(It.IsAny<CompanyAPI.Domain.Entities.Company>(), It.IsAny<CancellationToken>()), Times.Once);
+        TagDto tagDto = _fixture.Create<TagDto>();
+        company.AddTags(new List<Tag>
+            { new (tagDto.Name) });
 
-        _mockMapper.Verify(x => x.Map<CompanySummaryDto>(It.IsAny<CompanyAPI.Domain.Entities.Company>()), Times.Once);
+        Tag tag = _mapper.Map<Tag>(tagDto);
+
+        Mock<IRepository<Tag>> tagRepoMock = new ();
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s => s.AddAsync(It.IsAny<Company>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(company);
+
+        Mock<IProjectService> projectServiceMock = new ();
+        CompanyService companyService =
+            new (companyRepoMock.Object, tagRepoMock.Object, _mapper, projectServiceMock.Object);
+
+        // Act
+        CompanySummaryDto result = await companyService.CreateAsync(companySummary);
+
+        // Assert
+        result.Should().BeEquivalentTo(_mapper.Map<CompanySummaryDto>(company));
+        companyRepoMock.Verify(v => v.AddAsync(It.IsAny<Company>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async void GetByIdAsync_WhenCalled_ReturnsCompanyWithGivenId()
+    {
+        // Arrange
+        int id = _fixture.Create<int>();
+        string companyName = _fixture.Create<string>();
+        Company company = new (companyName);
+        company.Id = id;
+
+        Mock<IProjectService> projectServiceMock = new ();
+        projectServiceMock.Setup(s => s.GetProjectsByCompanyIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(new List<ProjectSummaryDto>());
+
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s =>
+                s.FirstOrDefaultAsync(It.IsAny<CompanyByIdWithTagsSpec>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(company);
+
+        CompanyService companyService = new (companyRepoMock.Object, null, _mapper, projectServiceMock.Object);
+
+        // Act
+        CompanyDto? result = await companyService.GetByIdAsync(id);
+
+        // Assert
+        result.Should().BeEquivalentTo(_mapper.Map<CompanyDto>(company));
+        companyRepoMock.Verify(
+            v => v.FirstOrDefaultAsync(It.IsAny<CompanyByIdWithTagsSpec>(), It.IsAny<CancellationToken>()),
+            Times.Once());
+
+        projectServiceMock.Verify(v => v.GetProjectsByCompanyIdAsync(It.IsAny<int>()), Times.Once());
+    }
+
+    [Fact]
+    public async void GetByIdAsync_WhenCompanyNotInDb_ReturnsNull()
+    {
+        // Arrange
+        int id = _fixture.Create<int>();
+
+        Mock<IProjectService> projectServiceMock = new ();
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        CompanyService companyService = new (companyRepoMock.Object, null, _mapper, projectServiceMock.Object);
+
+        // Act
+        CompanyDto? result = await companyService.GetByIdAsync(id);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public async void UpdateNameAsync_WhenCalledWithValidIdAndNewName_ReturnsUpdatedCompanySummary()
+    {
+        // Arrange
+        int id = _fixture.Create<int>();
+        string name = _fixture.Create<string>();
+
+        Company company = new (name);
+        company.Id = id;
+
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s => s.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(company);
+
+        CompanyService companyService = new (companyRepoMock.Object, null, _mapper, null);
+
+        // Act
+        CompanySummaryDto? result = await companyService.UpdateNameAsync(id, name);
+
+        // Assert
+        result.Should().BeEquivalentTo(_mapper.Map<CompanySummaryDto>(company));
+        companyRepoMock.Verify(v => v.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once());
+        companyRepoMock.Verify(v => v.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async Task AddTagAsync_WhenCalled_ReturnsUpdatedCompany()
+    {
+        // Arrange
+        int id = _fixture.Create<int>();
+        string tagName = _fixture.Create<string>();
+        string companyName = _fixture.Create<string>();
+        TagDto tagDto = new ()
+            { Name = tagName };
+
+        Tag existingTag = new (tagName);
+
+        Company company = new (companyName);
+        company.AddTag(existingTag);
+
+        Mock<IRepository<Tag>> tagRepoMock = new ();
+        tagRepoMock.Setup(s => s.FirstOrDefaultAsync(It.IsAny<TagByNameSpec>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(existingTag);
+
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s =>
+                s.FirstOrDefaultAsync(It.IsAny<CompanyByIdWithTagsSpec>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(company);
+
+        Mock<IProjectService> projectServiceMock = new ();
+        CompanyService companyService =
+            new (companyRepoMock.Object, tagRepoMock.Object, _mapper, projectServiceMock.Object);
+
+        // Act
+        CompanySummaryDto? result = await companyService.AddTagAsync(id, tagName);
+
+        // Assert
+        result.Should().BeEquivalentTo(_mapper.Map<CompanySummaryDto>(company));
+        tagRepoMock.Verify(v => v.FirstOrDefaultAsync(It.IsAny<TagByNameSpec>(), It.IsAny<CancellationToken>()),
+            Times.Once());
+
+        companyRepoMock.Verify(
+            v => v.FirstOrDefaultAsync(It.IsAny<CompanyByIdWithTagsSpec>(), It.IsAny<CancellationToken>()),
+            Times.Once());
+
+        companyRepoMock.Verify(v => v.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Fact]
+    public async void DeleteTagAsync_WhenCalled_ReturnsUpdatedCompany()
+    {
+        // Arrange
+        int id = _fixture.Create<int>();
+        string tagName = _fixture.Create<string>();
+        string companyName = _fixture.Create<string>();
+
+        // Use the existing tag's constructor to create a new Tag object with the same name.
+        Tag newTag = new (tagName);
+        Company company = new (companyName);
+        company.Id = id;
+        company.AddTag(newTag);
+
+        Mock<IRepository<Company>> companyRepoMock = new ();
+        companyRepoMock.Setup(s =>
+                s.FirstOrDefaultAsync(It.IsAny<CompanyByIdWithTagsSpec>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(company);
+
+        Mock<IProjectService> projectServiceMock = new ();
+        CompanyService companyService = new (companyRepoMock.Object, null, _mapper, projectServiceMock.Object);
+
+        // Act
+        CompanySummaryDto? result = await companyService.DeleteTagAsync(id, tagName);
+
+        // Assert
+        result.Should().BeEquivalentTo(_mapper.Map<CompanySummaryDto>(company));
+        companyRepoMock.Verify(
+            v => v.FirstOrDefaultAsync(It.IsAny<CompanyByIdWithTagsSpec>(), It.IsAny<CancellationToken>()),
+            Times.Once());
+
+        companyRepoMock.Verify(v => v.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
     }
 }
