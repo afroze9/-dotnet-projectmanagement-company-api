@@ -10,6 +10,7 @@ using ProjectManagement.CompanyAPI.Model;
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Controllers;
 
+[ExcludeFromCodeCoverage]
 public class TagControllerTests
 {
     private readonly Mock<ICompanyService> _companyServiceMock = new ();

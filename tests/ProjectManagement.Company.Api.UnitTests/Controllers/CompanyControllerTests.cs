@@ -12,6 +12,7 @@ using ProjectManagement.CompanyAPI.Model;
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Controllers;
 
+[ExcludeFromCodeCoverage]
 public class CompanyControllerTests
 {
     private readonly CompanyController _companyController;

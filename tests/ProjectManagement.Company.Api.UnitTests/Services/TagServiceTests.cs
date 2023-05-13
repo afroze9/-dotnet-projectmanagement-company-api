@@ -8,6 +8,7 @@ using ProjectManagement.CompanyAPI.Services;
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Services;
 
+[ExcludeFromCodeCoverage]
 public class TagServiceTests
 {
     private readonly Mock<IRepository<Company>> _companyRepositoryMock = new ();

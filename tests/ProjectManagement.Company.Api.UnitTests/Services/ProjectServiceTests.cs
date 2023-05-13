@@ -9,6 +9,7 @@ using ProjectManagement.CompanyAPI.Services;
 
 namespace ProjectManagement.CompanyAPI.UnitTests.Services;
 
+[ExcludeFromCodeCoverage]
 public class ProjectServiceTests
 {
     private readonly HttpClient _client;
