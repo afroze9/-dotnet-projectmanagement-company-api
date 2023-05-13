@@ -12,10 +12,10 @@ RUN dotnet restore --configfile nuget.config "ProjectManagement.Company.Api.cspr
 COPY ["src/ProjectManagement.Company.Api/*", "./"]
 RUN dotnet build -c Release -o /app/build --no-restore "ProjectManagement.Company.Api.csproj"
 
-FROM build as publish
+FROM build AS publish
 RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false --no-restore "ProjectManagement.Company.Api.csproj"
 
-FROM base as final
+FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ProjectManagement.Company.Api.dll"]
