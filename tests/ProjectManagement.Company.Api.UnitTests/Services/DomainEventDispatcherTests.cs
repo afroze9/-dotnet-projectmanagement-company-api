@@ -20,11 +20,15 @@ public class DomainEventDispatcherTests
     public async Task DispatchAndClearEvents_ShouldDispatchAllEventsForEachEntity()
     {
         // Arrange
+        TestEntityBase entityWithEvents = new TestEntityBase();
+        entityWithEvents.AddEvent();
+
         TestEntityBase[] entities =
         {
             new TestEntityBase(),
             new TestEntityBase(),
             new TestEntityBase(),
+            entityWithEvents,
         };
 
         DomainEventBase[] expectedEvents = entities.SelectMany(x => x.DomainEvents).ToArray();
@@ -59,8 +63,16 @@ public class DomainEventDispatcherTests
             Assert.Empty(entity.DomainEvents);
         }
     }
-}
 
-public class TestEntityBase : EntityBase
-{
+    private class TestEntityBase : EntityBase
+    {
+        public void AddEvent()
+        {
+            RegisterDomainEvent(new TestDomainEvent());
+        }
+    }
+
+    private class TestDomainEvent : DomainEventBase
+    {
+    }
 }
