@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using ProjectManagement.CompanyAPI.DTO;
@@ -15,6 +16,7 @@ public class ProjectServiceTests
     private readonly HttpClient _client;
     private readonly IMapper _mapper;
     private readonly Mock<HttpMessageHandler> _mockHandler;
+    private readonly Mock<ILogger<ProjectService>> _logger;
 
     public ProjectServiceTests()
     {
@@ -23,6 +25,7 @@ public class ProjectServiceTests
         _mapper = config.CreateMapper();
         _mockHandler = new Mock<HttpMessageHandler>();
         _client = new HttpClient(_mockHandler.Object);
+        _logger = new Mock<ILogger<ProjectService>>();
     }
 
     [Fact]
@@ -60,7 +63,7 @@ public class ProjectServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(response);
 
-        ProjectService service = new (_client, _mapper);
+        ProjectService service = new (_client, _mapper, _logger.Object);
 
         // Act
         List<ProjectSummaryDto> actualProjects = await service.GetProjectsByCompanyIdAsync(companyId);
@@ -85,7 +88,7 @@ public class ProjectServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(response);
 
-        ProjectService service = new (_client, _mapper);
+        ProjectService service = new (_client, _mapper, _logger.Object);
 
         // Act
         List<ProjectSummaryDto> actualProjects = await service.GetProjectsByCompanyIdAsync(companyId);
